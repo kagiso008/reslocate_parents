@@ -10,7 +10,6 @@ import 'package:reslocate/pages/parent_pages/available_universities.dart';
 import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:reslocate/available_courses/getAvailableCourses.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ParentUniversitiespage extends StatefulWidget {
@@ -47,7 +46,7 @@ class _UniversitiesPageState extends State<ParentUniversitiespage> {
           .limit(1)
           .single();
 
-      if (response == null || response['id'] == null) {
+      if (response['id'] == null) {
         throw Exception('No child profile found');
       }
 

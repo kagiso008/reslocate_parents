@@ -100,7 +100,7 @@ class _InsightsPageState extends State<InsightsPage> {
           .limit(1)
           .single();
 
-      if (response == null || response['id'] == null) {
+      if (response['id'] == null) {
         print('No child profile found');
         return null;
       }
@@ -609,7 +609,7 @@ class _InsightsPageState extends State<InsightsPage> {
                         const SizedBox(height: 16),
                       ],
                     ))
-                .toList(),
+                ,
           ],
         ),
       ),

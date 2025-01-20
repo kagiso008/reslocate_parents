@@ -66,7 +66,7 @@ class _ParentGetAvailableCoursesState extends State<ParentGetAvailableCourses> {
           .limit(1)
           .single();
 
-      if (response == null || response['id'] == null) {
+      if (response['id'] == null) {
         throw Exception('No child profile found');
       }
 

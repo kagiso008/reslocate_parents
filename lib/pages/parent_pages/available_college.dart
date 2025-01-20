@@ -67,7 +67,7 @@ class _ParentGetCollegeCoursesState extends State<ParentGetCollegeCourses> {
           .limit(1)
           .single();
 
-      if (response == null || response['id'] == null) {
+      if (response['id'] == null) {
         throw Exception('No child profile found');
       }
 

@@ -18,15 +18,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		zc0IhgRDKQPiQp98a3QhlaNdf10=
+		5TQpInI+VMwrFpoM8wL8+TVd3I0=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		U4HlntZmPLoOIziVMQuqHDZARM0=
+		0cNf61HRaKirEBmpcsIZcS/h2X4=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		+e7QbO6QIvdu0SeGBkQ0GbeZI+E=
+		F1O8LqYInVDf4ah1McPz35NA2JU=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -34,11 +34,11 @@
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		ceeca6fjQqYy4t8PMwKf+g/A0bU=
+		P+ZNm36KHYjVULA4TAs0vnUqOEY=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		HyLeiCFoJf9duUD5NJyzdN7KCbI=
+		7VhXn+TBTwDLIk2w0G877h3Si2s=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -46,11 +46,11 @@
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		Fd8eZTMGrrIVfZZuTehleYs1v1o=
+		zUzOUEbkxRNEgVf0i6l/KCRujFY=
 		</data>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		mE5zgc64S3Ma02mPJnLjYmwbCc4=
+		4aPxUiZwbm3h1pAgxuJWEYY7K9M=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -92,14 +92,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			XrU+h6/FzIWXjJx8H2lImppS1aZqr6KBa3z4xRoMDOM=
+			HLvptMtz1ia62gsaR2fu6hgFDT6Xn8s4BESJ+hII+ik=
 			</data>
 		</dict>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9n6gsjaOurP/XnOmq3xrXdEf59vvi5n9Syb17IsnSqs=
+			mvyPfjY0655YV/8z7JD3Im8I3uM1h5ZWyy87bGMCSwg=
 			</data>
 		</dict>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -113,14 +113,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5QAkXmxMbtSX7hNR0sweH9L8QdH26ALEvMOoU3nuZGQ=
+			f/oZWMX3QUmnbGlCoPGtgOopqEN/b3RqbmOBTZWnMl4=
 			</data>
 		</dict>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			V9T6l/nF544cNPXhWmbaTGXTpOb82SeyAtCMnzFzDc4=
+			p/z3gw1sk4p+fp2rIIxtZOSBReQkQTWkG/cTR85BVdc=
 			</data>
 		</dict>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -134,14 +134,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			82ItGnzV+aTmWYjiXCmfpFwzGl734nngDY2G9aaV8E0=
+			km60bbQJ81FRWJM5GkLhDZD3uhSCgnKZIEjDWbjCATE=
 			</data>
 		</dict>
 		<key>Modules/flutter_custom_tabs_ios.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FaKFuGxjt33m4lWcfjLKcJXUN8Bx7dAkSTNY/xhDRvc=
+			pCzvRfdcHw2UOXBffvHOptZiShn+GKfoNSMYVKFDQdI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

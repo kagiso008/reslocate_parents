@@ -4,8 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart'; // Assuming your logo is an SVG
 import 'package:reslocate/pages/careerAspirations.dart';
 import 'package:reslocate/pages/parent_pages/studentDetails.dart';
 import 'package:reslocate/widgets/mytoast.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:intl/intl.dart'; // For formatting the date
+// For formatting the date
 
 class ParentAccount extends StatefulWidget {
   const ParentAccount({super.key});

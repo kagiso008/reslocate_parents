@@ -10,8 +10,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:io';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart';
 
 final supabase = Supabase.instance.client;

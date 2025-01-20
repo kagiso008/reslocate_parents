@@ -60,6 +60,8 @@ dependencies:
   open_file: ^3.5.10
   share_plus: ^10.1.4
   fl_chart: ^0.65.0
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^6.0.3
 
 dev_dependencies:
   flutter_test:

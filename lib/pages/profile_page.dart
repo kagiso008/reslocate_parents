@@ -5,6 +5,7 @@ import 'package:reslocate/main.dart';
 import 'package:reslocate/pages/bookmarks.dart';
 import 'package:reslocate/pages/chat.dart';
 import 'package:reslocate/pages/editProfile.dart';
+import 'package:reslocate/pages/generate_qr.dart';
 import 'package:reslocate/pages/homepage.dart';
 import 'package:reslocate/pages/login_page.dart';
 import 'package:reslocate/widgets/loadingAnimation.dart';
@@ -348,6 +349,19 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildCoolProfileItem(
               Icons.transgender, 'Gender', profileData['gender']),
           _buildCoolProfileItem(Icons.people, 'Race', profileData['race']),
+          _buildCoolQRItem(
+            Icons.qr_code,
+            'QR Code',
+            'Tap to view',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QRCodePage(),
+                ),
+              );
+            },
+          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 20),
@@ -567,6 +581,36 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCoolQRItem(IconData icon, String label, String? value,
+      {VoidCallback? onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Card(
+        color: const Color(0xFFE3F2FA).withOpacity(0.4),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ListTile(
+          leading: Icon(icon, color: const Color(0xFF0D47A1)),
+          title: Text(
+            label,
+            style: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          subtitle: Text(
+            value ?? 'Not available',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          onTap: onTap, // Add the onTap action here
+        ),
       ),
     );
   }

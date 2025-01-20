@@ -318,6 +318,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
   Widget _buildInfoCard() {
     return Card(
       elevation: 2,
+      color: Colors.white, // Added this line to set white background
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -347,6 +348,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
 
   Widget _buildExplanationField() {
     return Card(
+      color: Colors.white, // Added this line to set white background
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -377,6 +379,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
 
   Widget _buildYesNoQuestion(String key, String question) {
     return Card(
+      color: Colors.white, // Added this line to set white background
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -423,6 +426,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
 
   Widget _buildDropdownQuestion(String key, String question) {
     return Card(
+      color: Colors.white, // Added this line to set white background
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
