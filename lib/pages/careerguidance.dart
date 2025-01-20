@@ -145,7 +145,9 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, color: Color(0xFF0D47A1)),
-            onPressed: _showExitConfirmationDialog,
+            onPressed: () {
+              _showExitConfirmationDialog(context);
+            },
           ),
           SvgPicture.asset('assets/images/reslocate_logo.svg', height: 50),
           const SizedBox(width: 10),
@@ -177,29 +179,110 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
     );
   }
 
-  Future<void> _showExitConfirmationDialog() async {
+  Future<void> _showExitConfirmationDialog(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Exit Form?'),
-          content: const Text(
-              'Your progress will be lost. Are you sure you want to exit?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon or Illustration (optional)
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orangeAccent,
+                  size: 48,
+                ),
+                const SizedBox(height: 16),
+
+                // Title
+                const Text(
+                  'Exit Form?',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+
+                // Content
+                const Text(
+                  'Your progress will be lost. Are you sure you want to exit?',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+
+                // Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Cancel Button
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(false); // Cancel
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+
+                    // Confirm Button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(true); // Confirm exit
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orangeAccent,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Exit',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Exit'),
-            ),
-          ],
+          ),
         );
       },
     );
 
-    if (result ?? false) {
+    if (result == true) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
