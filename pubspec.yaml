@@ -1,0 +1,204 @@
+name: reslocate
+description: "Get matched to universities, scholarships,careers and more instantly."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.1.2+22
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.6
+  supabase_flutter: ^2.7.0
+  
+  flutter_pdfview: ^1.3.3
+  path_provider: ^2.1.4
+  provider: ^6.1.2
+  fluttertoast: ^8.2.8
+  image_picker: ^1.1.2
+  email_validator: ^3.0.0
+  flutter_custom_tabs: ^2.1.0
+  url_launcher_android: ^6.0.9
+
+  http: any
+  shared_preferences: ^2.3.2
+  flutter_dotenv: ^5.2.1
+  flutter_svg: ^2.0.10+1
+  intl: ^0.20.1
+  carousel_slider: ^5.0.0
+  cached_network_image: ^3.4.1
+  photo_view: ^0.15.0
+  connectivity_plus: ^6.1.0
+  flutter_math_fork: ^0.7.2
+  flutter_html: ^3.0.0-beta.2
+  internet_connection_checker: ^1.0.0+1
+  google_generative_ai: ^0.4.6
+  url_launcher: ^6.3.1
+  audioplayers: ^6.1.0
+  pdf: ^3.11.1
+  open_file: ^3.5.10
+  share_plus: ^10.1.4
+  fl_chart: ^0.65.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/reslocate_logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/uct_logo.webp
+    - assets/images/ukzn_logo.webp
+    - assets/images/dut_logo.webp
+    - assets/images/stellies_logo.webp
+    - assets/images/uj_logo.webp
+    - assets/images/up_logo.png
+    - assets/images/wits_logo.webp
+    - assets/images/wsu_logo.png
+    - assets/images/uz_logo.png
+    - assets/images/ul_logo.png
+    - assets/images/uwc_logo.png
+    - assets/images/nwu_logo.png
+    - assets/images/nmu_logo.png
+    - assets/images/tut_logo.jpeg
+    - assets/images/cput_logo.png
+    - assets/images/Rhodes_logo.png
+    - assets/images/univen_logo.svg.png
+    - assets/images/mut_logo.png
+    - assets/images/ufs_logo.png
+    - assets/images/vut_logo.png
+    - assets/images/ufh_logo.png
+    - assets/images/spu_logo.png
+    - assets/images/cut_logo.webp
+    - assets/images/smu_logo.png
+    - assets/images/university.svg
+    - assets/images/choose.svg
+    - assets/images/consultant.svg
+    - assets/images/folder.svg
+    - assets/images/reslocate_logo.svg
+    - assets/images/pastPapers.svg
+    - assets/images/tvetColleges.svg
+    - assets/images/scholarships.svg
+    - assets/images/slider_1.svg
+    - assets/images/slider_2.svg
+    - assets/images/slider_3.svg
+    - assets/images/slider_4.svg
+    - assets/images/slider_5.svg
+    - assets/images/slider_6.svg
+    - assets/images/reslocate_load_logo.svg
+    - assets/images/splash_1.svg
+    - assets/images/splash_2.svg
+    - assets/images/splash_3.svg
+    - assets/images/reslocate_logo_name.svg
+    - assets/images/login_illustration.svg
+    - assets/images/housing.svg
+    - assets/images/college_images/ekurhuleniEastTVET_logo.jpg
+    - assets/images/college_images/cjc_logo.jpg
+    - assets/images/college_images/ekurhuleni-west-college-logo.jpg
+    - assets/images/college_images/sedibeng_logo 2.jpg
+    - assets/images/college_images/SouthWestTvetGauteng_logo 2.jpg
+    - assets/images/college_images/tshwaneNorth_logo 2.png
+    - assets/images/college_images/TshwaneSouth_logo 2.jpg
+    - assets/images/college_images/west_coast_college_logo.jpg
+    - assets/images/college_images/coastalTvet_logo 2.jpg
+    - assets/images/college_images/esayidiTvet_logo.png
+    - assets/images/college_images/ElangeniTvet_logo 2.jpg
+    - assets/images/college_images/majuba_logo.png
+    - assets/images/college_images/mnambithi_logo 2.png
+    - assets/images/college_images/mthashana_logo 2.jpg
+    - assets/images/college_images/mnambithi_logo 2.png
+    - assets/images/college_images/umfolozi-logo.png
+    - assets/images/college_images/UmgungundlovuTvet_logo.png
+    - assets/images/college_images/bolandcollege_logo.png
+    - assets/images/college_images/collegeOfCT_logo 2.png
+    - assets/images/college_images/FalseBayCollege_logo 2.png
+    - assets/images/college_images/NorthLinkCollege_logo.jpg
+    - assets/images/college_images/SouthCapeTVET_logo 2.png
+    - assets/images/college_images/west_coast_college_logo 2.jpg
+    - assets/images/college_images/coastalTvet_logo.jpg
+    - assets/images/college_images/ElangeniTvet_logo.jpg
+    - assets/images/college_images/majuba_logo 2.png
+    - assets/images/college_images/mthashana_logo.jpg
+    - assets/images/college_images/umfolozi-logo.png
+    - assets/images/college_images/UmgungundlovuTvet_logo.png
+    - assets/images/college_images/bolandcollege_logo.png
+    - assets/images/college_images/FalseBayCollege_logo.png
+    - assets/images/college_images/NorthLinkCollege_logo.jpg
+    - assets/images/college_images/SouthCapeTVET_logo.png
+    - assets/images/college_images/mopaniSouthEast_logo 2.jpg
+    - assets/images/college_images/Buffalo-tvet_logo.jpg
+    - assets/images/college_images/EastcapeTvet_Logo.jpg
+    - assets/images/college_images/IngweTvet_logo 2.png
+    - assets/images/college_images/college-kinghintsa-logo.jpg
+    - assets/images/college_images/king_sabata_tvet_logo.png
+    - assets/images/college_images/Lovedale-TVET-College-logo.png
+    - assets/images/college_images/port-elizabeth-tvet-college-logo.jpg
+    - assets/images/college_images/Flavius_Mareka_Tvet_logo 2.png
+    - assets/images/college_images/Goldfields_Tvet_logo 2.jpg
+    - assets/images/college_images/Maluti-TVET-College_logo.jpg
+    - assets/images/college_images/Motheo_tvet_logo.png
+    - assets/images/college_images/capricorn_tvet_logo 2.jpg
+    - assets/images/college_images/lephalale_tvet_logo.png
+    - assets/images/college_images/letaba-tvet-college-logo 2.png
+    - assets/images/college_images/sekhukhuneTvet_logo.jpg
+    - assets/images/college_images/ikhala_tvet_college.jpg
+    - assets/images/college_images/vhembeTvet_logo 2.jpg
+    - assets/images/college_images/WaterBurgTvet_logo 2.png
+    - assets/images/college_images/Ehlanzeni-TVET-College-logo.jpg
+    - assets/images/college_images/Gert_Sibande_logo.png
+    - assets/images/college_images/nkangala_Tvet_logo.png
+    - assets/images/college_images/NCRTvet_logo.jpg
+    - assets/images/college_images/NCUTtvet_logo.jpg
+    - assets/images/college_images/Westcol.jpg
+    - assets/images/college_images/orbitTvet_logo 2.jpg
+    - assets/images/college_images/taletso_logo.jpg
+    - assets/images/college_images/VuselelaTvet_logo.png
+    - assets/images/college_images/Thekwini.jpg
+    - assets/images/um_logo.png
+    - assets/images/college_images/ekurhuleniEastTVET_logo 2.jpg
+    - assets/images/reslocate_logo.svg
+    - private.env
+    - assets/sounds/
+    - assets/svgs/
+
