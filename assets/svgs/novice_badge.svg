@@ -1,0 +1,7 @@
+<svg width="100" height="120" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0, 0)">
+    <circle cx="50" cy="50" r="45" fill="#7CB9E8" />
+    <circle cx="50" cy="50" r="40" fill="#6AA9D8" />
+    <path d="M50 25 L60 45 L80 45 L65 60 L70 80 L50 70 L30 80 L35 60 L20 45 L40 45 Z" fill="#89C9F8" />
+  </g>
+</svg>
