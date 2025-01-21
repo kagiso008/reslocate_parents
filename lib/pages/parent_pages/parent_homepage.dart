@@ -594,7 +594,8 @@ class _ParentHomepageContentState extends State<ParentHomepageContent> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const InsightsPage(),
+                        builder: (context) =>
+                            const InsightsPage(),
                       ),
                     );
                   },

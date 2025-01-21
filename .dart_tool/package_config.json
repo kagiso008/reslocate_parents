@@ -380,6 +380,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "get",
+      "rootUri": "file:///Users/kagiso/.pub-cache/hosted/pub.dev/get-4.6.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "google_generative_ai",
       "rootUri": "file:///Users/kagiso/.pub-cache/hosted/pub.dev/google_generative_ai-0.4.6",
       "packageUri": "lib/",
@@ -1052,7 +1058,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2025-01-20T10:16:22.319202Z",
+  "generated": "2025-01-21T08:03:22.859766Z",
   "generator": "pub",
   "generatorVersion": "3.5.4",
   "flutterRoot": "file:///Users/kagiso/flutter",
