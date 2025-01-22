@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/pages/parent_pages/parent_bookmarks.dart';
 import 'package:reslocate/pages/parent_pages/parent_profile.dart';
+import 'package:reslocate/widgets/mytoast.dart';
 import 'package:reslocate/widgets/pnav_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
@@ -11,9 +12,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 final supabase = Supabase.instance.client;
 
@@ -132,7 +131,14 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
             .maybeSingle();
 
         if (marks != null) {
-          processedMarks[child['id']] = Map<String, dynamic>.from(marks);
+          // Convert marks to a Map and remove subjects with null values
+          final filteredMarks = Map<String, dynamic>.from(marks)
+            ..removeWhere((key, value) => value == null);
+
+          // Only add the processed marks if there's valid data remaining
+          if (filteredMarks.isNotEmpty) {
+            processedMarks[child['id']] = filteredMarks;
+          }
         }
 
         // Fetch career guidance responses
@@ -218,14 +224,6 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 'Soft Skills Explanation',
                 careerGuidanceResponse['soft_skills_explanation'] ??
                     'Not specified'),
-            _buildInfoRow(
-                'Form Version',
-                careerGuidanceResponse['form_version']?.toString() ??
-                    'Not specified'),
-            _buildInfoRow(
-                'Submission Platform',
-                careerGuidanceResponse['submission_platform'] ??
-                    'Not specified'),
           ],
         ),
       ),
@@ -264,41 +262,78 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
             ),
             const SizedBox(height: 16),
             // Core subjects
-            _buildMarkRow(
+            if (marks['math_mark'] != null && marks['math_mark'] != 'None')
+              _buildMarkRow(
                 'Mathematics (${marks['math_type'] ?? 'Not specified'})',
                 marks['math_mark'],
-                level: marks['math_level']),
-            _buildMarkRow(marks['home_language'] ?? 'Home Language',
+                level: marks['math_level'],
+              ),
+            if (marks['home_language_mark'] != null &&
+                marks['home_language_mark'] != 'None')
+              _buildMarkRow(
+                marks['home_language'] ?? 'Home Language',
                 marks['home_language_mark'],
-                level: marks['home_language_level']),
-            _buildMarkRow(
+                level: marks['home_language_level'],
+              ),
+            if (marks['first_additional_language_mark'] != null &&
+                marks['first_additional_language_mark'] != 'None')
+              _buildMarkRow(
                 marks['first_additional_language'] ??
                     'First Additional Language',
                 marks['first_additional_language_mark'],
-                level: marks['first_additional_language_level']),
-            if (marks['second_additional_language'] != null)
-              _buildMarkRow(marks['second_additional_language'],
-                  marks['second_additional_language_mark'],
-                  level: marks['second_additional_language_level']),
-            _buildMarkRow('Life Orientation', marks['life_orientation_mark'],
-                level: marks['life_orientation_level']),
+                level: marks['first_additional_language_level'],
+              ),
+            if (marks['second_additional_language_mark'] != null &&
+                marks['second_additional_language_mark'] != 'None')
+              _buildMarkRow(
+                marks['second_additional_language'],
+                marks['second_additional_language_mark'],
+                level: marks['second_additional_language_level'],
+              ),
+            if (marks['life_orientation_mark'] != null &&
+                marks['life_orientation_mark'] != 'None')
+              _buildMarkRow(
+                'Life Orientation',
+                marks['life_orientation_mark'],
+                level: marks['life_orientation_level'],
+              ),
             // Optional subjects
-            if (marks['subject1'] != null)
-              _buildMarkRow(marks['subject1'], marks['subject1_mark'],
-                  level: marks['subject1_level']),
-            if (marks['subject2'] != null)
-              _buildMarkRow(marks['subject2'], marks['subject2_mark'],
-                  level: marks['subject2_level']),
-            if (marks['subject3'] != null)
-              _buildMarkRow(marks['subject3'], marks['subject3_mark'],
-                  level: marks['subject3_level']),
-            if (marks['subject4'] != null)
-              _buildMarkRow(marks['subject4'], marks['subject4_mark'],
-                  level: marks['subject4_level']),
+            if (marks['subject1'] != null &&
+                marks['subject1_mark'] != null &&
+                marks['subject1_mark'] != 'None')
+              _buildMarkRow(
+                marks['subject1'],
+                marks['subject1_mark'],
+                level: marks['subject1_level'],
+              ),
+            if (marks['subject2'] != null &&
+                marks['subject2_mark'] != null &&
+                marks['subject2_mark'] != 'None')
+              _buildMarkRow(
+                marks['subject2'],
+                marks['subject2_mark'],
+                level: marks['subject2_level'],
+              ),
+            if (marks['subject3'] != null &&
+                marks['subject3_mark'] != null &&
+                marks['subject3_mark'] != 'None')
+              _buildMarkRow(
+                marks['subject3'],
+                marks['subject3_mark'],
+                level: marks['subject3_level'],
+              ),
+            if (marks['subject4'] != null &&
+                marks['subject4_mark'] != null &&
+                marks['subject4_mark'] != 'None')
+              _buildMarkRow(
+                marks['subject4'],
+                marks['subject4_mark'],
+                level: marks['subject4_level'],
+              ),
             const Divider(),
-            if (marks['average'] != null)
+            if (marks['average'] != null && marks['average'] != 'None')
               _buildMarkRow('Average', marks['average'], isAverage: true),
-            if (marks['aps_mark'] != null)
+            if (marks['aps_mark'] != null && marks['aps_mark'] != 'None')
               _buildMarkRow('APS Score', marks['aps_mark'], isAPS: true),
           ],
         ),
@@ -609,12 +644,6 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 studentProfile['quintile'] ?? 'Not specified'),
             _buildCoolProfileItem(Icons.phone, 'Phone Number',
                 studentProfile['phone_number'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.verified_user, 'Verified',
-                studentProfile['is_verified']?.toString() ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.info_outline, 'Status',
-                studentProfile['status'] ?? 'Not specified'),
-            _buildCoolProfileItem(
-                Icons.badge, 'Role', studentProfile['role'] ?? 'Not specified'),
           ],
         ),
       ),
@@ -622,6 +651,31 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   }
 
   Widget _buildCareerAspirationsSection(Map<String, dynamic> studentProfile) {
+    // Define the list of career aspirations with labels and icons
+    final aspirations = [
+      {
+        'icon': Icons.stars,
+        'label': 'First Choice',
+        'value': studentProfile['career_asp1']
+      },
+      {
+        'icon': Icons.star_border,
+        'label': 'Second Choice',
+        'value': studentProfile['career_asp2']
+      },
+      {
+        'icon': Icons.star_outline,
+        'label': 'Third Choice',
+        'value': studentProfile['career_asp3']
+      },
+    ];
+
+    // Filter out aspirations that are null or "Not specified"
+    final filteredAspirations = aspirations.where((aspiration) {
+      final value = aspiration['value'];
+      return value != null && value != 'Not specified';
+    }).toList();
+
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -647,12 +701,11 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildCoolProfileItem(Icons.stars, 'First Choice',
-                studentProfile['career_asp1'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.star_border, 'Second Choice',
-                studentProfile['career_asp2'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.star_outline, 'Third Choice',
-                studentProfile['career_asp3'] ?? 'Not specified'),
+            ...filteredAspirations.map((aspiration) => _buildCoolProfileItem(
+                  aspiration['icon'] as IconData,
+                  aspiration['label'] as String,
+                  aspiration['value'] as String,
+                )),
           ],
         ),
       ),
@@ -660,6 +713,31 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   }
 
   Widget _buildAcademicChallengesSection(Map<String, dynamic> studentProfile) {
+    // Define the list of challenges with labels and icons
+    final challenges = [
+      {
+        'icon': Icons.warning_amber,
+        'label': 'Challenge 1',
+        'value': studentProfile['acad_chal1']
+      },
+      {
+        'icon': Icons.warning_amber_outlined,
+        'label': 'Challenge 2',
+        'value': studentProfile['acad_chal2']
+      },
+      {
+        'icon': Icons.warning_outlined,
+        'label': 'Challenge 3',
+        'value': studentProfile['acad_chal3']
+      },
+    ];
+
+    // Filter out challenges that are null or "Not specified"
+    final filteredChallenges = challenges.where((challenge) {
+      final value = challenge['value'];
+      return value != null && value != 'Not specified';
+    }).toList();
+
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -686,12 +764,11 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildCoolProfileItem(Icons.warning_amber, 'Challenge 1',
-                studentProfile['acad_chal1'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.warning_amber_outlined, 'Challenge 2',
-                studentProfile['acad_chal2'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.warning_outlined, 'Challenge 3',
-                studentProfile['acad_chal3'] ?? 'Not specified'),
+            ...filteredChallenges.map((challenge) => _buildCoolProfileItem(
+                  challenge['icon'] as IconData,
+                  challenge['label'] as String,
+                  challenge['value'] as String,
+                )),
           ],
         ),
       ),
@@ -699,6 +776,31 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   }
 
   Widget _buildHobbiesSection(Map<String, dynamic> studentProfile) {
+    // Define the list of hobbies with labels and icons
+    final hobbies = [
+      {
+        'icon': Icons.sports_esports,
+        'label': 'Hobby 1',
+        'value': studentProfile['hobby1']
+      },
+      {
+        'icon': Icons.sports,
+        'label': 'Hobby 2',
+        'value': studentProfile['hobby2']
+      },
+      {
+        'icon': Icons.palette,
+        'label': 'Hobby 3',
+        'value': studentProfile['hobby3']
+      },
+    ];
+
+    // Filter out hobbies that are null or "Not specified"
+    final filteredHobbies = hobbies.where((hobby) {
+      final value = hobby['value'];
+      return value != null && value != 'Not specified';
+    }).toList();
+
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -724,12 +826,11 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildCoolProfileItem(Icons.sports_esports, 'Hobby 1',
-                studentProfile['hobby1'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.sports, 'Hobby 2',
-                studentProfile['hobby2'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.palette, 'Hobby 3',
-                studentProfile['hobby3'] ?? 'Not specified'),
+            ...filteredHobbies.map((hobby) => _buildCoolProfileItem(
+                  hobby['icon'] as IconData,
+                  hobby['label'] as String,
+                  hobby['value'] as String,
+                )),
           ],
         ),
       ),
@@ -737,6 +838,51 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   }
 
   Widget _buildAdditionalInfoSection(Map<String, dynamic> studentProfile) {
+    // Define the list of profile items with labels and icons
+    final additionalInfoItems = [
+      {
+        'icon': Icons.location_city,
+        'label': 'Nearby Amenity',
+        'value': studentProfile['nearby_amenity']
+      },
+      {
+        'icon': Icons.security,
+        'label': 'Safety',
+        'value': studentProfile['safety']
+      },
+      {
+        'icon': Icons.star_rate,
+        'label': 'Important Feature',
+        'value': studentProfile['important_feature']
+      },
+      {
+        'icon': Icons.directions_bus,
+        'label': 'Commute',
+        'value': studentProfile['commute']
+      },
+      {
+        'icon': Icons.menu_book,
+        'label': 'Learning Method 1',
+        'value': studentProfile['learning_method1']
+      },
+      {
+        'icon': Icons.menu_book_outlined,
+        'label': 'Learning Method 2',
+        'value': studentProfile['learning_method2']
+      },
+      {
+        'icon': Icons.book_outlined,
+        'label': 'Learning Method 3',
+        'value': studentProfile['learning_method3']
+      },
+    ];
+
+    // Filter out items where the value is null or "Not specified"
+    final filteredItems = additionalInfoItems.where((item) {
+      final value = item['value'];
+      return value != null && value != 'Not specified';
+    }).toList();
+
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -763,20 +909,11 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildCoolProfileItem(Icons.location_city, 'Nearby Amenity',
-                studentProfile['nearby_amenity'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.security, 'Safety',
-                studentProfile['safety'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.star_rate, 'Important Feature',
-                studentProfile['important_feature'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.directions_bus, 'Commute',
-                studentProfile['commute'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.menu_book, 'Learning Method 1',
-                studentProfile['learning_method1'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.menu_book_outlined, 'Learning Method 2',
-                studentProfile['learning_method2'] ?? 'Not specified'),
-            _buildCoolProfileItem(Icons.book_outlined, 'Learning Method 3',
-                studentProfile['learning_method3'] ?? 'Not specified'),
+            ...filteredItems.map((item) => _buildCoolProfileItem(
+                  item['icon'] as IconData,
+                  item['label'] as String,
+                  item['value'] as String,
+                )),
           ],
         ),
       ),
@@ -825,9 +962,8 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
     return Center(
       child: ElevatedButton.icon(
         onPressed: () async {
-          const bucketName = 'pdfs'; // Replace with your bucket name
-          const filePath =
-              'sample_report/career_guidance_report.pdf'; // Replace with your PDF file path
+          const bucketName = 'pdfs';
+          const filePath = 'sample_report/career_guidance_report.pdf';
 
           try {
             final supabase = Supabase.instance.client;
@@ -839,22 +975,35 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
             if (publicUrl.isEmpty) {
               throw Exception('Failed to retrieve the PDF URL.');
             }
+            MyToast.showToast(context, "Downloading PDF...");
 
-            // Open the PDF in the browser or PDF viewer
-            if (await canLaunch(publicUrl)) {
-              await launch(publicUrl);
+            // Download the file
+            final response = await http.get(Uri.parse(publicUrl));
+
+            if (response.statusCode == 200) {
+              // Get temporary directory
+              final directory = await getApplicationDocumentsDirectory();
+              final filePath =
+                  '${directory.path}/career_guidance_sample_report.pdf';
+
+              // Write the file
+              final file = File(filePath);
+              await file.writeAsBytes(response.bodyBytes);
+
+              // Show success message
+              MyToast.showToast(context, "PDF downloaded successfully.");
+              await OpenFile.open(filePath);
             } else {
-              throw Exception('Could not open the PDF URL.');
+              throw Exception('Failed to download PDF');
             }
           } catch (e) {
-            // Show an error message if something goes wrong
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Error: ${e.toString()}')),
             );
           }
         },
-        icon: const Icon(Icons.picture_as_pdf),
-        label: const Text('View Sample Report'),
+        icon: const Icon(Icons.download),
+        label: const Text('Download Sample Report'),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0D47A1),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -1036,55 +1185,5 @@ Format the response in clear sections with detailed explanations.
         setState(() => _isGeneratingReport = false);
       }
     }
-  }
-}
-
-class ViewPdfButton extends StatelessWidget {
-  final String bucketName;
-  final String filePath;
-
-  const ViewPdfButton({
-    Key? key,
-    required this.bucketName,
-    required this.filePath,
-  }) : super(key: key);
-
-  Future<void> _viewPdf(BuildContext context) async {
-    final client = Supabase.instance.client;
-    try {
-      // Generate public URL for the PDF
-      final publicUrl = client.storage.from(bucketName).getPublicUrl(filePath);
-      if (publicUrl.isEmpty) {
-        throw Exception('Failed to get public URL for the file.');
-      }
-
-      // Open the URL
-      if (await canLaunch(publicUrl)) {
-        await launch(publicUrl);
-      } else {
-        throw Exception('Could not launch PDF URL.');
-      }
-    } catch (e) {
-      // Show an error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton.icon(
-        onPressed: () => _viewPdf(context),
-        icon: const Icon(Icons.picture_as_pdf),
-        label: const Text('View Career Guidance Report'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0D47A1),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-      ),
-    );
   }
 }

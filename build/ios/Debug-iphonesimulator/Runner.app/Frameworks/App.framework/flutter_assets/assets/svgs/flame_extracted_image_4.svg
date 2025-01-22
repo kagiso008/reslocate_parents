@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200"><g transform="translate(650, 50)">
+    <defs>
+      <linearGradient id="flame15Gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" style="stop-color:#FF0000" />
+        <stop offset="100%" style="stop-color:#FF6600" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="45" fill="#2C2C2C" />
+    <circle cx="50" cy="50" r="40" fill="#1C1C1C" />
+    
+    <path d="M50 10 C75 35 90 50 50 85 C10 50 25 35 50 10" fill="url(#flame15Gradient)">
+      <animate attributeName="d" values="M50 10 C75 35 90 50 50 85 C10 50 25 35 50 10;                 M50 12 C73 37 88 52 50 85 C12 52 27 37 50 12;                 M50 10 C75 35 90 50 50 85 C10 50 25 35 50 10" dur="0.8s" repeatCount="indefinite" />
+    </path>
+    <path d="M50 20 C65 40 75 50 50 75 C25 50 35 40 50 20" fill="#FF9933">
+      <animate attributeName="d" values="M50 20 C65 40 75 50 50 75 C25 50 35 40 50 20;                 M50 22 C63 42 73 52 50 75 C27 52 37 42 50 22;                 M50 20 C65 40 75 50 50 75 C25 50 35 40 50 20" dur="1.2s" repeatCount="indefinite" />
+    </path>
+    <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold" font-size="24">15</text>
+    <text x="50" y="110" text-anchor="middle" fill="#FF0000" font-family="Arial" font-weight="bold" font-size="12">WINS</text>
+  </g>
+
+  
+  </svg>
