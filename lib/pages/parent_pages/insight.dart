@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:math' show min, max;
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({Key? key}) : super(key: key);
@@ -267,6 +268,8 @@ class _InsightsPageState extends State<InsightsPage> {
   }
 
   Widget _buildDistributionSection() {
+    final currentStudentAps =
+        _insights.value['current_student_aps'] as int? ?? 0;
     final apsDistribution = _insights.value['aps_distribution'] as Map? ?? {};
     final subjectDistribution =
         _insights.value['subject_distribution'] as Map? ?? {};
@@ -290,19 +293,6 @@ class _InsightsPageState extends State<InsightsPage> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'APS Distribution',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: _buildDistributionChart(apsDistribution),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -412,83 +402,5 @@ class _InsightsPageState extends State<InsightsPage> {
             )),
       ],
     );
-  }
-
-  Widget _buildDistributionChart(Map data) {
-    final spots = <FlSpot>[];
-
-    try {
-      // Sort the entries by key to ensure proper ordering
-      final sortedEntries = data.entries.toList()
-        ..sort((a, b) => a.key.toString().compareTo(b.key.toString()));
-
-      for (var entry in sortedEntries) {
-        // Skip entries where the key is 'none'
-        if (entry.key.toString().toLowerCase() == 'none') continue;
-
-        // Clean and parse the x value (key)
-        double x = 0;
-        if (entry.key is num) {
-          x = (entry.key as num).toDouble();
-        } else {
-          x = double.tryParse(
-                  entry.key.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ??
-              0;
-        }
-
-        // Clean and parse the y value
-        double y = 0;
-        if (entry.value is num) {
-          y = (entry.value as num).toDouble();
-        } else {
-          y = double.tryParse(
-                  entry.value.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ??
-              0;
-        }
-
-        spots.add(FlSpot(x, y));
-      }
-    } catch (e) {
-      debugPrint('Error parsing chart data: $e');
-    }
-
-    return spots.isEmpty
-        ? const Center(child: Text('No data available'))
-        : LineChart(
-            LineChartData(
-              gridData: FlGridData(show: true),
-              titlesData: FlTitlesData(
-                topTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(value.toInt().toString()),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              borderData: FlBorderData(show: true),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: spots,
-                  isCurved: true,
-                  color: Colors.blue,
-                  barWidth: 3,
-                  dotData: FlDotData(show: true),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: Colors.blue.withOpacity(0.2),
-                  ),
-                ),
-              ],
-            ),
-          );
   }
 }

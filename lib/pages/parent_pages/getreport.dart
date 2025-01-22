@@ -11,6 +11,9 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -170,6 +173,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
     }
 
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -231,6 +235,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   Widget _buildAcademicMarksSection(Map<String, dynamic> marks) {
     if (marks.isEmpty) {
       return Card(
+        color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: const Padding(
@@ -241,6 +246,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
     }
 
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -545,6 +551,8 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                   _buildCareerGuidanceResponsesSection(
                       _children[_selectedChildIndex]),
                   const SizedBox(height: 20),
+                  _buildSeeSampleButton(),
+                  const SizedBox(height: 20),
                   _buildDownloadReportButton(_children[_selectedChildIndex]),
                 ],
               ),
@@ -561,6 +569,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
 
   Widget _buildStudentInfoSection(Map<String, dynamic> studentProfile) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -614,6 +623,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
 
   Widget _buildCareerAspirationsSection(Map<String, dynamic> studentProfile) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -651,6 +661,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
 
   Widget _buildAcademicChallengesSection(Map<String, dynamic> studentProfile) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -689,6 +700,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
 
   Widget _buildHobbiesSection(Map<String, dynamic> studentProfile) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -726,6 +738,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
 
   Widget _buildAdditionalInfoSection(Map<String, dynamic> studentProfile) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -804,6 +817,49 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSeeSampleButton() {
+    return Center(
+      child: ElevatedButton.icon(
+        onPressed: () async {
+          const bucketName = 'pdfs'; // Replace with your bucket name
+          const filePath =
+              'sample_report/career_guidance_report.pdf'; // Replace with your PDF file path
+
+          try {
+            final supabase = Supabase.instance.client;
+
+            // Retrieve the public URL of the PDF
+            final publicUrl =
+                supabase.storage.from(bucketName).getPublicUrl(filePath);
+
+            if (publicUrl.isEmpty) {
+              throw Exception('Failed to retrieve the PDF URL.');
+            }
+
+            // Open the PDF in the browser or PDF viewer
+            if (await canLaunch(publicUrl)) {
+              await launch(publicUrl);
+            } else {
+              throw Exception('Could not open the PDF URL.');
+            }
+          } catch (e) {
+            // Show an error message if something goes wrong
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${e.toString()}')),
+            );
+          }
+        },
+        icon: const Icon(Icons.picture_as_pdf),
+        label: const Text('View Sample Report'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0D47A1),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     );
   }
@@ -980,5 +1036,55 @@ Format the response in clear sections with detailed explanations.
         setState(() => _isGeneratingReport = false);
       }
     }
+  }
+}
+
+class ViewPdfButton extends StatelessWidget {
+  final String bucketName;
+  final String filePath;
+
+  const ViewPdfButton({
+    Key? key,
+    required this.bucketName,
+    required this.filePath,
+  }) : super(key: key);
+
+  Future<void> _viewPdf(BuildContext context) async {
+    final client = Supabase.instance.client;
+    try {
+      // Generate public URL for the PDF
+      final publicUrl = client.storage.from(bucketName).getPublicUrl(filePath);
+      if (publicUrl.isEmpty) {
+        throw Exception('Failed to get public URL for the file.');
+      }
+
+      // Open the URL
+      if (await canLaunch(publicUrl)) {
+        await launch(publicUrl);
+      } else {
+        throw Exception('Could not launch PDF URL.');
+      }
+    } catch (e) {
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton.icon(
+        onPressed: () => _viewPdf(context),
+        icon: const Icon(Icons.picture_as_pdf),
+        label: const Text('View Career Guidance Report'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0D47A1),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+    );
   }
 }
