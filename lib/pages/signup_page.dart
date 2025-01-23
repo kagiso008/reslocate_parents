@@ -27,7 +27,7 @@ class SignupPageState extends State<SignupPage> {
   bool _isConfirmPasswordVisible = false;
   bool _acceptedPrivacyPolicy = false;
   UserRole _selectedRole = UserRole.learner;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   Future<void> _launchPrivacyPolicy() async {
     final Uri url = Uri.parse('https://reslocate.net/privacy.html');

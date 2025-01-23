@@ -10,11 +10,11 @@
 		</data>
 		<key>flutter_assets/AssetManifest.bin</key>
 		<data>
-		dCUeVdq4w1uY2oOLzww8fd/jRL4=
+		fJs9SBeW5eUdpIiGUsGmhnfwE0Y=
 		</data>
 		<key>flutter_assets/AssetManifest.json</key>
 		<data>
-		Dgbl3G7K7L1TVwd7WQOet15aG3I=
+		8NUUUdHTKvMr5zJ3K4CRFZMINkc=
 		</data>
 		<key>flutter_assets/FontManifest.json</key>
 		<data>
@@ -456,6 +456,10 @@
 		<data>
 		zPC22GLms/P7j0ZW3I2MF7wL3/o=
 		</data>
+		<key>flutter_assets/assets/svgs/facebook-logo.svg</key>
+		<data>
+		qQ/nYQHrQlTk7Iii+5uUuS/uMvo=
+		</data>
 		<key>flutter_assets/assets/svgs/flame_extracted_image_1.svg</key>
 		<data>
 		AO2HMXpXtZrtJlJ5eBoUQctnqPg=
@@ -475,6 +479,10 @@
 		<key>flutter_assets/assets/svgs/flame_extracted_image_5.svg</key>
 		<data>
 		SBsDpHMx3VIGkkef/DWQRQf5+h8=
+		</data>
+		<key>flutter_assets/assets/svgs/google-logo.svg</key>
+		<data>
+		dqxUJlsV9TMY/vY/MzK3pcOKGBo=
 		</data>
 		<key>flutter_assets/assets/svgs/legend_badge.svg</key>
 		<data>
@@ -502,7 +510,7 @@
 		</data>
 		<key>flutter_assets/kernel_blob.bin</key>
 		<data>
-		aTj6FFAuQ2XqdtH1Xfno4gtsDAs=
+		a9lyYTtPVBw3iQhhcOLVcTMv/hw=
 		</data>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -615,14 +623,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			aMiD7QTmM4tEgy3fFk5qZ/iBCZjrW1pzwvl+VNf11rs=
+			IxJMDTWKSqpqOJVFOjK+w0jRXbBB9cDPl61fNLvmwww=
 			</data>
 		</dict>
 		<key>flutter_assets/AssetManifest.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			g8dumCIQkV3JqskpjYUZ+d7PnrUVgXB6olWbV0nbcv8=
+			TDNxgjfxpXu1v5yjyJ9zhDL4W8f6wnemmxtzEYy5BD8=
 			</data>
 		</dict>
 		<key>flutter_assets/FontManifest.json</key>
@@ -1395,6 +1403,13 @@
 			geyDpQhujuleIy4JuqK5RBEVP/C7RVe/8qWroqdUxt0=
 			</data>
 		</dict>
+		<key>flutter_assets/assets/svgs/facebook-logo.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			VqEsm775ZgVaChcn56xwDbn9JS41IqHBUYK4xtioITo=
+			</data>
+		</dict>
 		<key>flutter_assets/assets/svgs/flame_extracted_image_1.svg</key>
 		<dict>
 			<key>hash2</key>
@@ -1428,6 +1443,13 @@
 			<key>hash2</key>
 			<data>
 			jmd+apwD+hfFRUWX+6xGOZfPMwye6+vjzZ4qhVTyjCo=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/svgs/google-logo.svg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			OBRr/Z7/bb8NdHcfLmJccNh9N3Dg0IDbtuUNsdVAP0Y=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/svgs/legend_badge.svg</key>
@@ -1476,7 +1498,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			PiDU8upAUjpujvGAsdNjxx5yBtmwBlQBNso77ohJvW0=
+			qDRFycthWC6zN8YHgUD/OlrBlohMxQES4lkgPAgGSPc=
 			</data>
 		</dict>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>

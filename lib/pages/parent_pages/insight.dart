@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:math' show min, max;
 
 class InsightsPage extends StatefulWidget {
-  const InsightsPage({Key? key}) : super(key: key);
+  const InsightsPage({super.key});
 
   @override
   State<InsightsPage> createState() => _InsightsPageState();
