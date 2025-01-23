@@ -204,4 +204,6 @@ flutter:
     - private.env
     - assets/sounds/
     - assets/svgs/
+    - assets/svgs/google-logo.svg
+    - assets/svgs/facebook-logo.svg
 

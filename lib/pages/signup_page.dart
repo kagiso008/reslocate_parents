@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:reslocate/pages/verify_email.dart';
 import 'package:reslocate/pages/login_page.dart';
 import 'package:reslocate/widgets/mytoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -28,6 +27,7 @@ class SignupPageState extends State<SignupPage> {
   bool _isConfirmPasswordVisible = false;
   bool _acceptedPrivacyPolicy = false;
   UserRole _selectedRole = UserRole.learner;
+  bool _isLoading = false;
 
   Future<void> _launchPrivacyPolicy() async {
     final Uri url = Uri.parse('https://reslocate.net/privacy.html');
@@ -345,6 +345,109 @@ class SignupPageState extends State<SignupPage> {
     return password.length >= 6 && password.contains(RegExp(r'[A-Za-z]'));
   }
 
+  Future<bool> showConfirmationDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+    String confirmText = 'Confirm',
+    String cancelText = 'Cancel',
+  }) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Content
+                    Text(
+                      content,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Cancel Button
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop(false);
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 24),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: const BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                          child: Text(
+                            cancelText,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+
+                        // Confirm Button
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop(true);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 24),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            confirmText,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ) ??
+        false;
+  }
+
   Future<void> _signUp() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -366,8 +469,19 @@ class SignupPageState extends State<SignupPage> {
       return;
     }
 
+    // Show confirmation dialog
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      title: 'Confirm Email',
+      content: 'Is "$email" the correct email address?',
+      confirmText: 'Confirm',
+      cancelText: 'Cancel',
+    );
+
+    // Proceed with signup only if confirmed
+    if (!confirmed) return;
+
     try {
-      // Sign up with additional user metadata
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
@@ -378,7 +492,6 @@ class SignupPageState extends State<SignupPage> {
       );
 
       if (response.user != null && mounted) {
-        // Create initial profile in the profiles table
         try {
           await _supabase.from('profiles').upsert({
             'id': response.user!.id,
@@ -387,7 +500,6 @@ class SignupPageState extends State<SignupPage> {
             'updated_at': DateTime.now().toIso8601String(),
           });
 
-          // Create career guidance response entry if user is a learner
           if (_selectedRole == UserRole.learner) {
             await _supabase.from('career_guidance_responses').insert({
               'user_id': response.user!.id,
@@ -400,10 +512,9 @@ class SignupPageState extends State<SignupPage> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage2()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         } catch (profileError) {
-          // Handle profile creation error
           print('Error creating profile: $profileError');
           MyToast.showToast(context,
               'Account created but profile setup failed. Please contact support.');
@@ -418,7 +529,7 @@ class SignupPageState extends State<SignupPage> {
         MyToast.showToast(
             context, 'Weak password: Please use a stronger password');
       } else {
-        MyToast.showToast(context, e.message); // Show specific error message
+        MyToast.showToast(context, e.message);
       }
     } catch (e) {
       print('Signup error: $e');
