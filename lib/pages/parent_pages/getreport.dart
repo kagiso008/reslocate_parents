@@ -268,30 +268,27 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 marks['math_mark'],
                 level: marks['math_level'],
               ),
-            if (marks['home_language_mark'] != null &&
-                marks['home_language_mark'] != 'None')
+            if (marks['home_language_mark'] != 'None')
               _buildMarkRow(
                 marks['home_language'] ?? 'Home Language',
                 marks['home_language_mark'],
                 level: marks['home_language_level'],
               ),
-            if (marks['first_additional_language_mark'] != null &&
-                marks['first_additional_language_mark'] != 'None')
+            if (marks['first_additional_language_mark'] != 'None')
               _buildMarkRow(
                 marks['first_additional_language'] ??
                     'First Additional Language',
                 marks['first_additional_language_mark'],
                 level: marks['first_additional_language_level'],
               ),
-            if (marks['second_additional_language_mark'] != null &&
-                marks['second_additional_language_mark'] != 'None')
+            if (marks['second_additional_language_mark'] != 'None' &&
+                marks['second_additional_language'] != 'None')
               _buildMarkRow(
                 marks['second_additional_language'],
                 marks['second_additional_language_mark'],
                 level: marks['second_additional_language_level'],
               ),
-            if (marks['life_orientation_mark'] != null &&
-                marks['life_orientation_mark'] != 'None')
+            if (marks['life_orientation_mark'] != 'None')
               _buildMarkRow(
                 'Life Orientation',
                 marks['life_orientation_mark'],
@@ -299,6 +296,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
               ),
             // Optional subjects
             if (marks['subject1'] != null &&
+                marks['subject1'] != 'None' &&
                 marks['subject1_mark'] != null &&
                 marks['subject1_mark'] != 'None')
               _buildMarkRow(
@@ -307,6 +305,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 level: marks['subject1_level'],
               ),
             if (marks['subject2'] != null &&
+                marks['subject2'] != 'None' &&
                 marks['subject2_mark'] != null &&
                 marks['subject2_mark'] != 'None')
               _buildMarkRow(
@@ -315,6 +314,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 level: marks['subject2_level'],
               ),
             if (marks['subject3'] != null &&
+                marks['subject3'] != 'None' &&
                 marks['subject3_mark'] != null &&
                 marks['subject3_mark'] != 'None')
               _buildMarkRow(
@@ -323,6 +323,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
                 level: marks['subject3_level'],
               ),
             if (marks['subject4'] != null &&
+                marks['subject4'] != 'None' &&
                 marks['subject4_mark'] != null &&
                 marks['subject4_mark'] != 'None')
               _buildMarkRow(
