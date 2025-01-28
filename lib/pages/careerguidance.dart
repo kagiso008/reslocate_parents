@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/pages/homepage.dart';
+import 'package:reslocate/widgets/mytoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Get Supabase client instance
@@ -28,6 +29,14 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
     'libraryVisits': null,
     'schoolLibrary': null,
     'computerLab': null,
+    'preferredActivities': null,
+    'workEnvironment': null,
+    'problemSolvingStyle': null,
+    'teamRole': null,
+    'energySource': null,
+    'informationProcessing': null,
+    'decisionMaking': null,
+    'lifestylePreference': null,
   };
 
   final Map<String, String> _questionLabels = {
@@ -44,6 +53,16 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
         'Does your high school have a well-equipped library with a variety of academic resources?',
     'computerLab':
         'Does your high school have a computer lab with reliable internet access for student use?',
+    'preferredActivities': 'What type of activities do you most enjoy doing?',
+    'workEnvironment':
+        'In what type of work environment do you feel most comfortable?',
+    'problemSolvingStyle': 'How do you prefer to solve problems?',
+    'teamRole': 'What role do you typically take in team projects?',
+    'energySource': 'How do you typically recharge and gain energy?',
+    'informationProcessing': 'How do you prefer to process new information?',
+    'decisionMaking': 'How do you typically make important decisions?',
+    'lifestylePreference':
+        'How do you prefer to organize your work and daily life?',
   };
 
   final Map<String, List<String>> _dropdownOptions = {
@@ -63,6 +82,54 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
       'Time management and organization',
       'Leadership and initiative',
       'Creativity and innovation'
+    ],
+    'preferredActivities': [
+      'Working with tools and machines (Realistic)',
+      'Conducting research and solving puzzles (Investigative)',
+      'Creating art or expressing creativity (Artistic)',
+      'Helping and teaching others (Social)',
+      'Leading and influencing others (Enterprising)',
+      'Following established procedures (Conventional)'
+    ],
+    'workEnvironment': [
+      'Hands-on, practical settings',
+      'Research laboratories or technical environments',
+      'Creative, unstructured spaces',
+      'Collaborative, people-oriented settings',
+      'Business-oriented, competitive environments',
+      'Organized, structured offices'
+    ],
+    'problemSolvingStyle': [
+      'Through practical, hands-on experimentation',
+      'Through systematic analysis and research',
+      'Through creative, innovative approaches',
+      'Through discussion and collaboration',
+      'Through taking charge and decisive action',
+      'Through following established procedures'
+    ],
+    'teamRole': [
+      'Technical Expert/Implementer',
+      'Analyst/Researcher',
+      'Creative Innovator',
+      'Team Builder/Mediator',
+      'Leader/Coordinator',
+      'Organizer/Planner'
+    ],
+    'energySource': [
+      'Being around others and engaging in group activities (Extraversion)',
+      'Spending time alone or with close friends (Introversion)'
+    ],
+    'informationProcessing': [
+      'Focus on concrete facts and details (Sensing)',
+      'Focus on patterns and future possibilities (Intuition)'
+    ],
+    'decisionMaking': [
+      'Based on logic and objective analysis (Thinking)',
+      'Based on values and impact on people (Feeling)'
+    ],
+    'lifestylePreference': [
+      'Prefer structure and planned activities (Judging)',
+      'Prefer flexibility and spontaneity (Perceiving)'
     ],
   };
   @override
@@ -100,6 +167,16 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
             'libraryVisits': response['library_visits'],
             'schoolLibrary': response['school_library'],
             'computerLab': response['computer_lab'],
+            'preferredActivities': response['preferred_activities'],
+            'workEnvironment': response['work_environment'],
+            'problemSolvingStyle': response['problem_solving_style'],
+            'teamRole': response['team_role'],
+            'energySource': response['energy_source'],
+            'informationProcessing': response['information_processing'],
+            'decisionMaking': response['decision_making'],
+            'lifestylePreference': response['lifestyle_preference'],
+            'submission_platform': 'mobile',
+            'form_version': 2, //
           };
 
           if (response['soft_skills_explanation'] != null) {
@@ -332,12 +409,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
         .every((entry) => entry.value != null);
 
     if (!isComplete) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please answer all questions'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      MyToast.showToast(context, 'Please answer all questions');
       return;
     }
 
@@ -359,8 +431,16 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
         'library_visits': _formData['libraryVisits'],
         'school_library': _formData['schoolLibrary'],
         'computer_lab': _formData['computerLab'],
+        'preferred_activities': _formData['preferredActivities'],
+        'work_environment': _formData['workEnvironment'],
+        'problem_solving_style': _formData['problemSolvingStyle'],
+        'team_role': _formData['teamRole'],
+        'energy_source': _formData['energySource'],
+        'information_processing': _formData['informationProcessing'],
+        'decision_making': _formData['decisionMaking'],
+        'lifestyle_preference': _formData['lifestylePreference'],
         'submission_platform': 'mobile',
-        'form_version': 1,
+        'form_version': 2,
       };
 
       await supabase
@@ -368,13 +448,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
           .upsert(formattedData, onConflict: 'user_id');
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Form submitted successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
+        MyToast.showToast(context, 'Form submitted successfully!');
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.pushReplacement(
             context,
@@ -384,12 +458,8 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error submitting form: ${error.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        MyToast.showToast(
+            context, 'Error submitting form: ${error.toString()}');
       }
     } finally {
       if (mounted) {

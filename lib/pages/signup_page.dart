@@ -102,8 +102,6 @@ class SignupPageState extends State<SignupPage> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 16),
-                _buildRoleSelection(),
-                const SizedBox(height: 16),
                 // Password field
                 TextField(
                   controller: _passwordController,
@@ -276,66 +274,6 @@ class SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildRoleSelection() {
-    return Card(
-      color: Colors.white,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Colors.black26),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 12.0, top: 8.0),
-              child: Text(
-                'I am a:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D47A1),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<UserRole>(
-                    title: const Text('Learner'),
-                    value: UserRole.learner,
-                    groupValue: _selectedRole,
-                    activeColor: const Color(0xFF0D47A1),
-                    onChanged: (UserRole? value) {
-                      setState(() {
-                        _selectedRole = value!;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: RadioListTile<UserRole>(
-                    title: const Text('Parent'),
-                    value: UserRole.parent,
-                    groupValue: _selectedRole,
-                    activeColor: const Color(0xFF0D47A1),
-                    onChanged: (UserRole? value) {
-                      setState(() {
-                        _selectedRole = value!;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r"^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     return emailRegExp.hasMatch(email);
@@ -485,27 +423,14 @@ class SignupPageState extends State<SignupPage> {
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
-        data: {
-          'role': _selectedRole.toString().split('.').last,
-          'is_parent': _selectedRole == UserRole.parent,
-        },
       );
 
       if (response.user != null && mounted) {
         try {
           await _supabase.from('profiles').upsert({
             'id': response.user!.id,
-            'role': _selectedRole.toString().split('.').last,
-            'is_parent': _selectedRole == UserRole.parent,
             'updated_at': DateTime.now().toIso8601String(),
           });
-
-          if (_selectedRole == UserRole.learner) {
-            await _supabase.from('career_guidance_responses').insert({
-              'user_id': response.user!.id,
-              'updated_at': DateTime.now().toIso8601String(),
-            });
-          }
 
           MyToast.showToast(context, 'Account created successfully!');
           MyToast.showToast(context, 'Please verify your email');
