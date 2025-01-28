@@ -13,13 +13,17 @@ class InsightsPage extends StatefulWidget {
 }
 
 class _InsightsPageState extends State<InsightsPage> {
+  final SupabaseClient _supabaseClient = Supabase.instance.client;
   final _isLoading = false.obs;
   final _insights = Rx<Map<String, dynamic>>({});
   final _supabase = Supabase.instance.client;
+  Map<String, int?> userMarks = {};
+  int? aps;
 
   @override
   void initState() {
     super.initState();
+    loadChildData();
     _fetchInsights();
   }
 
@@ -39,6 +43,141 @@ class _InsightsPageState extends State<InsightsPage> {
     } finally {
       _isLoading.value = false;
     }
+  }
+
+  Future<void> loadChildData() async {
+    setState(() {
+      _isLoading.value = true;
+      // Show loading animatiog
+    });
+
+    String childUserId = await getSelectedChildId();
+    await Future.wait([
+      _fetchUserMarks(childUserId),
+      Future.delayed(const Duration(seconds: 50)),
+    ]);
+
+    setState(() {
+      _isLoading.value = false;
+    });
+  }
+
+  Future<String> getSelectedChildId() async {
+    try {
+      final userId = _supabaseClient.auth.currentUser?.id;
+      print(userId);
+
+      if (userId == null) {
+        throw Exception('No user logged in');
+      }
+
+      final response = await _supabaseClient
+          .from('profiles')
+          .select('id')
+          .eq('parent_id', userId)
+          .limit(1)
+          .single();
+
+      if (response['id'] == null) {
+        throw Exception('No child profile found');
+      }
+
+      return response['id'].toString();
+    } catch (error) {
+      print('Error details: $error');
+      throw Exception('Error fetching child ID: $error');
+    }
+  }
+
+  Future<void> _fetchUserMarks(String childUserId) async {
+    try {
+      final response = await _supabaseClient
+          .from('user_marks')
+          .select(
+              'math_mark, subject1_mark, subject2_mark, subject3_mark, subject4_mark, home_language_mark, first_additional_language_mark, second_additional_language_mark')
+          .eq('user_id', childUserId)
+          .single();
+
+      setState(() {
+        userMarks = {
+          'math_mark': response['math_mark'],
+          'subject1_mark': response['subject1_mark'],
+          'subject2_mark': response['subject2_mark'],
+          'subject3_mark': response['subject3_mark'],
+          'subject4_mark': response['subject4_mark'],
+          'home_language_mark': response['home_language_mark'],
+          'first_additional_language_mark':
+              response['first_additional_language_mark'],
+          'second_additional_language_mark':
+              response['second_additional_language_mark'],
+        };
+        aps = _CalculateApsUP(userMarks);
+        _isLoading.value = false;
+      });
+    } catch (error) {
+      setState(() {
+        _isLoading.value = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching user marks: $error')),
+      );
+    }
+  }
+
+  int _CalculateApsUP(Map<String, int?> marks) {
+    int apsScore = 0;
+
+    // Add math_mark
+    if (marks['math_mark'] != null) {
+      apsScore += _getApsPoints(marks['math_mark']!);
+    }
+
+    // For subjects (subject1_mark, subject2_mark, subject3_mark, subject4_mark), take the best three marks
+    final subjectMarks = [
+      marks['subject1_mark'],
+      marks['subject2_mark'],
+      marks['subject3_mark'],
+      marks['subject4_mark'],
+    ];
+
+    // Sort subjects in descending order and take the best three
+    subjectMarks.sort((a, b) => (b ?? 0).compareTo(a ?? 0));
+
+    final bestThreeSubjects = subjectMarks.take(3);
+    for (var mark in bestThreeSubjects) {
+      if (mark != null) {
+        apsScore += _getApsPoints(mark);
+      }
+    }
+
+    // For languages, take the best two marks between home_language, first_additional_language, and second_additional_language
+    final languageMarks = [
+      marks['home_language_mark'],
+      marks['first_additional_language_mark'],
+      marks['second_additional_language_mark'],
+    ];
+
+    // Sort language marks in descending order and take the two highest
+    languageMarks.sort((a, b) => (b ?? 0).compareTo(a ?? 0));
+
+    final bestTwoLanguages = languageMarks.take(2);
+    for (var mark in bestTwoLanguages) {
+      if (mark != null) {
+        apsScore += _getApsPoints(mark);
+      }
+    }
+
+    return apsScore;
+  }
+
+  int _getApsPoints(int mark) {
+    if (mark >= 80) return 7;
+    if (mark >= 70) return 6;
+    if (mark >= 60) return 5;
+    if (mark >= 50) return 4;
+    if (mark >= 40) return 3;
+    if (mark >= 30) return 2;
+    return 1;
   }
 
   @override
@@ -135,6 +274,11 @@ class _InsightsPageState extends State<InsightsPage> {
   }
 
   Widget _buildOverviewSection() {
+    final currentAps = aps ?? 0;
+    final avgAps = _insights.value['avg_aps'] ?? 0;
+    final difference = currentAps - avgAps;
+    final isAboveAverage = difference >= 0;
+
     return Card(
       color: Colors.white,
       child: Padding(
@@ -167,6 +311,87 @@ class _InsightsPageState extends State<InsightsPage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+            Card(
+              color: const Color(0xFFF5F5F5),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Your child's APS Comparison",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Your APS',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '$currentAps',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0D47A1),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isAboveAverage
+                                ? Colors.green.withOpacity(0.1)
+                                : Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                isAboveAverage
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
+                                size: 16,
+                                color:
+                                    isAboveAverage ? Colors.green : Colors.red,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${difference.abs()} points ${isAboveAverage ? 'above' : 'below'} average',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: isAboveAverage
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
