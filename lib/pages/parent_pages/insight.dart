@@ -17,6 +17,7 @@ class _InsightsPageState extends State<InsightsPage> {
   final _isLoading = false.obs;
   final _insights = Rx<Map<String, dynamic>>({});
   final _supabase = Supabase.instance.client;
+  late Map<String, String> subjectNames;
   Map<String, int?> userMarks = {};
   int? aps;
 
@@ -25,6 +26,47 @@ class _InsightsPageState extends State<InsightsPage> {
     super.initState();
     loadChildData();
     _fetchInsights();
+  }
+
+  Map<String, String> _subjectDisplayNames = {
+    'math_mark': 'Mathematics',
+    'subject1_mark': 'First Choice Elective',
+    'subject2_mark': 'Second Choice Elective',
+    'subject3_mark': 'Third Choice Elective',
+    'subject4_mark': 'Fourth Choice Elective',
+    'home_language_mark': 'Home Language',
+    'first_additional_language_mark': 'First Additional Language',
+    'second_additional_language_mark': 'Second Additional Language',
+  };
+
+  Map<String, dynamic> _getSubjectPerformance() {
+    if (userMarks.isEmpty) return {};
+
+    // Create a new map excluding subject4 and second_additional_language if they are None
+    var filteredMarks = Map<String, num>.from(userMarks)
+      ..removeWhere((key, value) =>
+          value == null ||
+          key == 'subject4_mark' ||
+          key == 'second_additional_language_mark');
+
+    if (filteredMarks.isEmpty) return {};
+
+    // Find highest and lowest marks
+    var maxEntry =
+        filteredMarks.entries.reduce((a, b) => a.value > b.value ? a : b);
+    var minEntry =
+        filteredMarks.entries.reduce((a, b) => a.value < b.value ? a : b);
+
+    return {
+      'strongest': {
+        'subject': subjectNames[maxEntry.key] ?? maxEntry.key,
+        'mark': maxEntry.value
+      },
+      'weakest': {
+        'subject': subjectNames[minEntry.key] ?? minEntry.key,
+        'mark': minEntry.value
+      }
+    };
   }
 
   Future<void> _fetchInsights() async {
@@ -91,12 +133,17 @@ class _InsightsPageState extends State<InsightsPage> {
 
   Future<void> _fetchUserMarks(String childUserId) async {
     try {
-      final response = await _supabaseClient
-          .from('user_marks')
-          .select(
-              'math_mark, subject1_mark, subject2_mark, subject3_mark, subject4_mark, home_language_mark, first_additional_language_mark, second_additional_language_mark')
-          .eq('user_id', childUserId)
-          .single();
+      final response = await _supabaseClient.from('user_marks').select('''
+          math_mark, math_type,
+          subject1, subject1_mark,
+          subject2, subject2_mark,
+          subject3, subject3_mark,
+          subject4, subject4_mark,
+          home_language_mark, home_language,
+          first_additional_language_mark, first_additional_language,
+          second_additional_language_mark, second_additional_language,
+          life_orientation_mark
+        ''').eq('user_id', childUserId).single();
 
       setState(() {
         userMarks = {
@@ -110,7 +157,26 @@ class _InsightsPageState extends State<InsightsPage> {
               response['first_additional_language_mark'],
           'second_additional_language_mark':
               response['second_additional_language_mark'],
+          'life_orientation_mark': response['life_orientation_mark'],
         };
+
+        // Store the subject names
+        subjectNames = {
+          'math_mark': response['math_type'] ?? 'Mathematics',
+          'subject1_mark': response['subject1'] ?? 'First Choice Elective',
+          'subject2_mark': response['subject2'] ?? 'Second Choice Elective',
+          'subject3_mark': response['subject3'] ?? 'Third Choice Elective',
+          'subject4_mark': response['subject4'] ?? 'Fourth Choice Elective',
+          'home_language_mark': response['home_language'] ?? 'Home Language',
+          'first_additional_language_mark':
+              response['first_additional_language'] ??
+                  'First Additional Language',
+          'second_additional_language_mark':
+              response['second_additional_language'] ??
+                  'Second Additional Language',
+          'life_orientation_mark': 'Life Orientation'
+        };
+
         aps = _CalculateApsUP(userMarks);
         _isLoading.value = false;
       });
@@ -260,6 +326,8 @@ class _InsightsPageState extends State<InsightsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildOverviewSection(),
+                  const SizedBox(height: 24),
+                  _buildSubjectAnalysisSection(),
                   const SizedBox(height: 24),
                   _buildPerformanceSection(),
                   const SizedBox(height: 24),
@@ -559,6 +627,130 @@ class _InsightsPageState extends State<InsightsPage> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubjectAnalysisSection() {
+    final performance = _getSubjectPerformance();
+    if (performance.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Subject Analysis',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // Use column layout if width is less than 600dp
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    children: [
+                      _buildPerformanceCard(
+                        isStrong: true,
+                        subject: performance['strongest']['subject'],
+                        mark: performance['strongest']['mark'],
+                      ),
+                      const SizedBox(height: 16),
+                      _buildPerformanceCard(
+                        isStrong: false,
+                        subject: performance['weakest']['subject'],
+                        mark: performance['weakest']['mark'],
+                      ),
+                    ],
+                  );
+                }
+                // Use row layout for wider screens
+                return Row(
+                  children: [
+                    Expanded(
+                      child: _buildPerformanceCard(
+                        isStrong: true,
+                        subject: performance['strongest']['subject'],
+                        mark: performance['strongest']['mark'],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildPerformanceCard(
+                        isStrong: false,
+                        subject: performance['weakest']['subject'],
+                        mark: performance['weakest']['mark'],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPerformanceCard({
+    required bool isStrong,
+    required String subject,
+    required num mark,
+  }) {
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isStrong ? Icons.arrow_circle_up : Icons.arrow_circle_down,
+                  color: isStrong ? Colors.green : Colors.red,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    isStrong ? 'Strongest Subject' : 'Needs Attention',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subject,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$mark%',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isStrong ? Colors.green : Colors.red,
               ),
             ),
           ],

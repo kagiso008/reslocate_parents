@@ -95,7 +95,7 @@ final List<String> secondAdditionalLanguages = [
 final List<String> mathematics = [
   "Mathematics",
   "Mathematical Literacy",
-  "Technichal Mathematics",
+  "Technical Mathematics",
 ];
 
 final List<String> allSubjects = [
