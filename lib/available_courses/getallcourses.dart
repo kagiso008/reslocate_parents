@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/scholarshipsPage.dart';
@@ -178,7 +179,7 @@ class _GetAvailableAllCouresPageState extends State<GetAvailableAllCouresPage> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [

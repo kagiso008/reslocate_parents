@@ -4,6 +4,7 @@ import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
 import 'package:reslocate/widgets/mytoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class Studentdetails extends StatefulWidget {
   const Studentdetails({super.key});
@@ -149,7 +150,7 @@ class _StudentdetailsState extends State<Studentdetails> {
           if (_isProcessing)
             const Padding(
               padding: EdgeInsets.all(16.0),
-              child: CircularProgressIndicator(),
+              child: BouncingImageLoader(),
             ),
         ],
       ),

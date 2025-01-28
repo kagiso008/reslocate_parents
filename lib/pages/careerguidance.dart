@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/pages/homepage.dart';
 import 'package:reslocate/widgets/mytoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:reslocate/widgets/loadingAnimation.dart';
 // Get Supabase client instance
 final supabase = Supabase.instance.client;
 
@@ -199,7 +199,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
     if (_isLoading) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: BouncingImageLoader(),
         ),
       );
     }
@@ -579,7 +579,7 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
 
   Widget _buildDropdownQuestion(String key, String question) {
     return Card(
-      color: Colors.white, // Added this line to set white background
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -598,8 +598,10 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
               builder: (context, constraints) {
                 return DropdownButtonFormField<String>(
                   value: _formData[key],
-                  isExpanded: true, // Makes the dropdown take full width
-                  itemHeight: null, // Allows items to wrap
+                  isExpanded: true,
+                  itemHeight: null,
+                  dropdownColor:
+                      Colors.white, // Set dropdown menu background color
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -611,20 +613,24 @@ class _CareerGuidanceFormState extends State<CareerGuidanceForm> {
                     constraints: BoxConstraints(
                       maxWidth: constraints.maxWidth,
                     ),
+                    filled: true, // Enable filling
+                    fillColor: Colors.white, // Set input field background color
                   ),
-                  menuMaxHeight: MediaQuery.of(context).size.height *
-                      0.4, // Limits menu height to 40% of screen
+                  menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
                   items: _dropdownOptions[key]!.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Container(
                         constraints: BoxConstraints(
-                          maxWidth: constraints.maxWidth -
-                              42, // Account for padding and icon
+                          maxWidth: constraints.maxWidth - 42,
                         ),
                         child: Text(
                           value,
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color:
+                                Colors.black, // Ensure text is visible on white
+                          ),
                           softWrap: true,
                           overflow: TextOverflow.visible,
                         ),

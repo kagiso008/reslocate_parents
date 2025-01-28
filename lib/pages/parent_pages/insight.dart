@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({super.key});
@@ -108,7 +109,7 @@ class _InsightsPageState extends State<InsightsPage> {
         color: Colors.white,
         child: Obx(() {
           if (_isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: BouncingImageLoader());
           }
 
           return RefreshIndicator(

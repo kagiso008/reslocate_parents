@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class QRCodePage extends StatefulWidget {
   const QRCodePage({super.key});
@@ -83,7 +84,7 @@ class _QRCodePageState extends State<QRCodePage> {
         color: Colors.white, // Set the background color to white
         child: Center(
           child: userId.isEmpty
-              ? const CircularProgressIndicator()
+              ? const BouncingImageLoader()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

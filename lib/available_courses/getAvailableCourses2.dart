@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/scholarshipsPage.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
+
 
 class GetAvailableCoures2Page extends StatefulWidget {
   final double aps; // Add this parameter to receive the APS score
@@ -281,23 +283,22 @@ class _GetAvailableCoures2PageState extends State<GetAvailableCoures2Page> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [
                   // Unclickable card with university info
-                  if (universityCard != null)
-                  const SizedBox(height: 10),
+                  if (universityCard != null) const SizedBox(height: 10),
 
-                    GetAvailabeleCoursesCard2(
-                      title: universityCard!['title'],
-                      image_url: universityCard!['image_url'],
-                      route:
-                          const Placeholder(), // Replace with the correct route
-                      city: universityCard!['city'],
-                      province: universityCard!['province'],
-                      website: universityCard!['website'],
-                    ),
+                  GetAvailabeleCoursesCard2(
+                    title: universityCard!['title'],
+                    image_url: universityCard!['image_url'],
+                    route:
+                        const Placeholder(), // Replace with the correct route
+                    city: universityCard!['city'],
+                    province: universityCard!['province'],
+                    website: universityCard!['website'],
+                  ),
                   Card(
                     elevation: 0,
                     margin: const EdgeInsets.all(16.0),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/scholarshipsPage.dart';
 import 'package:reslocate/widgets/university_cards.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class GetAvailableCouresPage extends StatefulWidget {
   final int aps; // Add this parameter to receive the APS score
@@ -190,7 +191,6 @@ class _GetAvailableCouresPageState extends State<GetAvailableCouresPage> {
         isLoading = false;
       });
 
-      
       if (facultyCourses.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -281,21 +281,20 @@ class _GetAvailableCouresPageState extends State<GetAvailableCouresPage> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [
                   // Unclickable card with university info
-                  if (universityCard != null)
-                  const SizedBox(height: 10),
+                  if (universityCard != null) const SizedBox(height: 10),
 
-                    GetAvailabeleCoursesCard1(
-                      title: universityCard!['title'],
-                      image_url: universityCard!['image_url'],
-                      city: universityCard!['city'],
-                      province: universityCard!['province'],
-                      website: universityCard!['website'],
-                    ),
+                  GetAvailabeleCoursesCard1(
+                    title: universityCard!['title'],
+                    image_url: universityCard!['image_url'],
+                    city: universityCard!['city'],
+                    province: universityCard!['province'],
+                    website: universityCard!['website'],
+                  ),
                   Card(
                     elevation: 0,
                     margin: const EdgeInsets.all(16.0),

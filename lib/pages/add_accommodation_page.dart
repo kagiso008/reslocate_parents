@@ -4,8 +4,9 @@ import 'dart:convert'; // For encoding/decoding JSON
 import 'dart:io'; // For handling file operations
 import 'package:image_picker/image_picker.dart'; // Image picker for file selection
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
-// add_accommodation_page 
+// add_accommodation_page
 class AddAccommodationPage extends StatefulWidget {
   final Map<String, dynamic>? existingAccommodation;
 
@@ -67,13 +68,18 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
     super.initState();
     if (widget.existingAccommodation != null) {
       _nameController.text = widget.existingAccommodation!['name'] ?? '';
-      _locationController.text = widget.existingAccommodation!['location'] ?? '';
-      _priceController.text = widget.existingAccommodation!['price']?.toString() ?? '';
-      _descriptionController.text = widget.existingAccommodation!['description'] ?? '';
-      _imageUrlController.text = widget.existingAccommodation!['image_url'] ?? '';
+      _locationController.text =
+          widget.existingAccommodation!['location'] ?? '';
+      _priceController.text =
+          widget.existingAccommodation!['price']?.toString() ?? '';
+      _descriptionController.text =
+          widget.existingAccommodation!['description'] ?? '';
+      _imageUrlController.text =
+          widget.existingAccommodation!['image_url'] ?? '';
 
       _selectedAmenities = widget.existingAccommodation!['amenities'] != null
-          ? List<String>.from(json.decode(widget.existingAccommodation!['amenities']))
+          ? List<String>.from(
+              json.decode(widget.existingAccommodation!['amenities']))
           : [];
     }
   }
@@ -106,7 +112,8 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
         _priceController.text.isEmpty ||
         _descriptionController.text.isEmpty ||
         (useImageUrl && _imageUrlController.text.isEmpty) ||
-        (!useImageUrl && (_selectedImages == null || _selectedImages!.isEmpty))) {
+        (!useImageUrl &&
+            (_selectedImages == null || _selectedImages!.isEmpty))) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields!')),
       );
@@ -147,8 +154,6 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
               : 'Accommodation added successfully!'),
         ),
       );
-
-     
     } on PostgrestException catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${error.message}')),
@@ -184,13 +189,14 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                 children: [
                   buildTextField(_nameController, 'Name'),
                   buildTextField(_locationController, 'Location'),
-                  buildTextField(_priceController, 'Price', keyboardType: TextInputType.number),
+                  buildTextField(_priceController, 'Price',
+                      keyboardType: TextInputType.number),
                   buildTextField(_descriptionController, 'Description'),
-                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Use Image URL', style: TextStyle(color: Colors.black)),
+                      const Text('Use Image URL',
+                          style: TextStyle(color: Colors.black)),
                       Switch(
                         value: useImageUrl,
                         activeColor: Colors.green, // Green when active
@@ -200,10 +206,10 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                           });
                         },
                       ),
-                      const Text('Upload Images', style: TextStyle(color: Colors.black)),
+                      const Text('Upload Images',
+                          style: TextStyle(color: Colors.black)),
                     ],
                   ),
-
                   useImageUrl
                       ? buildTextField(_imageUrlController, 'Image URL')
                       : Column(
@@ -220,7 +226,10 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                                     spacing: 8.0,
                                     runSpacing: 8.0,
                                     children: [
-                                      ..._selectedImages!.asMap().entries.map((entry) {
+                                      ..._selectedImages!
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
                                         final int index = entry.key;
                                         final XFile image = entry.value;
                                         return Stack(
@@ -244,15 +253,18 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    _selectedImages!.removeAt(index);
+                                                    _selectedImages!
+                                                        .removeAt(index);
                                                   });
                                                 },
                                                 child: Container(
-                                                  decoration: const BoxDecoration(
+                                                  decoration:
+                                                      const BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Colors.green, 
+                                                    color: Colors.green,
                                                   ),
-                                                  padding: const EdgeInsets.all(4.0),
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
                                                   child: const Icon(
                                                     Icons.close,
                                                     size: 18,
@@ -263,7 +275,7 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                                             ),
                                           ],
                                         );
-                                      // ignore: unnecessary_to_list_in_spreads
+                                        // ignore: unnecessary_to_list_in_spreads
                                       }).toList(),
                                       GestureDetector(
                                         onTap: pickImages,
@@ -271,8 +283,10 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                                           width: 100,
                                           height: 100,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.green, width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: Colors.green, width: 2),
                                             color: Colors.white,
                                           ),
                                           child: const Center(
@@ -289,10 +303,9 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                                 : const Text('No images selected'),
                           ],
                         ),
-
                   const SizedBox(height: 20),
-
-                  const Text('Select Amenities', style: TextStyle(color: Colors.black)),
+                  const Text('Select Amenities',
+                      style: TextStyle(color: Colors.black)),
                   Wrap(
                     children: _amenities.map((amenity) {
                       return FilterChip(
@@ -310,10 +323,9 @@ class _AddAccommodationPageState extends State<AddAccommodationPage> {
                       );
                     }).toList(),
                   ),
-
                   const SizedBox(height: 20),
                   isLoading
-                      ? const CircularProgressIndicator()
+                      ? const BouncingImageLoader()
                       : ElevatedButton(
                           onPressed: addOrUpdateAccommodation,
                           style: ElevatedButton.styleFrom(

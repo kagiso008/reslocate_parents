@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
@@ -143,7 +144,7 @@ class _AccountingGrade11PageState extends State<AccountingGrade11Page> {
         ),
       ),
       body: pdfFiles.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : ListView(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
               children: groupedFiles.entries.map((entry) {
@@ -341,7 +342,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
           ),
           if (!_isReady)
             const Center(
-              child: CircularProgressIndicator(),
+              child: BouncingImageLoader(),
             ),
           Positioned(
             left: 0,

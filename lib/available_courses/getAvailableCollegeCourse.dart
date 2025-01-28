@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/scholarshipsPage.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class GetAvailableCollegeCouresPage extends StatefulWidget {
   final int aps; // Add this parameter to receive the APS score
@@ -283,20 +284,18 @@ class _GetAvailableCollegeCouresPageState
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  if (universityCard != null)
-                  const SizedBox(height: 10),
-
-                    GetAvailableCoursesCard(
-                      title: universityCard!['title'],
-                      image_url: universityCard!['image_url'],
-                      city: universityCard!['city'],
-                      province: universityCard!['province'],
-                      website: universityCard!['website'],
-                    ),
+                  if (universityCard != null) const SizedBox(height: 10),
+                  GetAvailableCoursesCard(
+                    title: universityCard!['title'],
+                    image_url: universityCard!['image_url'],
+                    city: universityCard!['city'],
+                    province: universityCard!['province'],
+                    website: universityCard!['website'],
+                  ),
                   facultyCourses.isEmpty
                       ? const Center(
                           child: Text('No courses available for your APS'))

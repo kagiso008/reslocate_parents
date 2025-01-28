@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
@@ -182,7 +183,7 @@ class _GeographyGrade12IEBPageState extends State<GeographyGrade12IEBPage> {
         ),
       ),
       body: pdfFiles.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -252,7 +253,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
           ),
           if (!_isReady)
             const Center(
-              child: CircularProgressIndicator(),
+              child: BouncingImageLoader(),
             ),
           Positioned(
             bottom: 20,

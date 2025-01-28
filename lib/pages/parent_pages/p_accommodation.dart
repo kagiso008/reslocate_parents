@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:reslocate/pages/binterest_form_page.dart';
 import 'dart:convert';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class ParentHousingListingsPage extends StatefulWidget {
   const ParentHousingListingsPage({super.key});
@@ -83,7 +84,7 @@ class _ParentHousingListingsPageState extends State<ParentHousingListingsPage> {
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : isError
               ? const Center(
                   child: Text(
@@ -261,8 +262,8 @@ class _ParentHousingListingsPageState extends State<ParentHousingListingsPage> {
                               imageUrl: url,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
+                              placeholder: (context, url) =>
+                                  const Center(child: BouncingImageLoader()),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),

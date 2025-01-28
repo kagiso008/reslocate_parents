@@ -77,7 +77,7 @@ Future<void> fetchImageUrls() async {
         title: const Text('House Images Gallery'),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : imageUrls.isEmpty
               ? const Center(child: Text('No images available'))
               : GridView.builder(

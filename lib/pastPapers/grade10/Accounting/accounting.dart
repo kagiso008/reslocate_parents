@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:reslocate/widgets/loadingAnimation.dart';
+
 
 class AccountingGrade10Page extends StatefulWidget {
   const AccountingGrade10Page({super.key});
@@ -22,11 +24,10 @@ class _AccountingGrade10PageState extends State<AccountingGrade10Page> {
     _fetchPDFFiles();
   }
 
-   Future<void> _fetchPDFFiles() async {
+  Future<void> _fetchPDFFiles() async {
     try {
-      final List<FileObject> objects = await supabase.storage
-          .from('pdfs')
-          .list(path: 'grade_10/ACCOUNTING');
+      final List<FileObject> objects =
+          await supabase.storage.from('pdfs').list(path: 'grade_10/ACCOUNTING');
 
       setState(() {
         pdfFiles = objects.where((file) => file.name.endsWith('.pdf')).toList();
@@ -144,7 +145,7 @@ class _AccountingGrade10PageState extends State<AccountingGrade10Page> {
         ),
       ),
       body: pdfFiles.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : ListView(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
               children: groupedFiles.entries.map((entry) {
@@ -215,7 +216,8 @@ class _PDFViewPageState extends State<PDFViewPage> {
   int _currentPage = 0;
   late PDFViewController _pdfViewController;
   bool _isFullScreen = false;
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
   double _currentScale = 1.0;
 
   @override
@@ -227,14 +229,16 @@ class _PDFViewPageState extends State<PDFViewPage> {
   void _zoomIn() {
     setState(() {
       _currentScale = (_currentScale + 0.1).clamp(1.0, 3.0);
-      _transformationController.value = Matrix4.identity()..scale(_currentScale);
+      _transformationController.value = Matrix4.identity()
+        ..scale(_currentScale);
     });
   }
 
   void _zoomOut() {
     setState(() {
       _currentScale = (_currentScale - 0.1).clamp(1.0, 3.0);
-      _transformationController.value = Matrix4.identity()..scale(_currentScale);
+      _transformationController.value = Matrix4.identity()
+        ..scale(_currentScale);
     });
   }
 
@@ -339,7 +343,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
           ),
           if (!_isReady)
             const Center(
-              child: CircularProgressIndicator(),
+              child: BouncingImageLoader(),
             ),
           Positioned(
             left: 0,
@@ -389,9 +393,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
                   // Full Screen Button
                   IconButton(
                     icon: Icon(
-                      _isFullScreen
-                          ? Icons.fullscreen_exit
-                          : Icons.fullscreen,
+                      _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
                       color: Colors.white,
                     ),
                     onPressed: () {

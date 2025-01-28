@@ -5,6 +5,7 @@ import 'package:reslocate/widgets/mytoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'homepage.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class ScholarshipsPage extends StatefulWidget {
   const ScholarshipsPage({super.key});
@@ -243,7 +244,7 @@ class _ScholarshipsPageState extends State<ScholarshipsPage> {
               );
             }
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: BouncingImageLoader());
             }
             notes = snapshot.data!;
             final visibleNotes = notes.take(_loadedItemsCount).toList();

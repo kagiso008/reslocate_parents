@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class EconomicsGrade10Page extends StatefulWidget {
   const EconomicsGrade10Page({super.key});
@@ -143,7 +144,7 @@ class _EconomicsGrade10PageState extends State<EconomicsGrade10Page> {
         ),
       ),
       body: pdfFiles.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : ListView(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
               children: groupedFiles.entries.map((entry) {
@@ -341,7 +342,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
           ),
           if (!_isReady)
             const Center(
-              child: CircularProgressIndicator(),
+              child: BouncingImageLoader(),
             ),
           Positioned(
             left: 0,

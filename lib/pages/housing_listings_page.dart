@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:reslocate/pages/binterest_form_page.dart';
 import 'dart:convert';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class HousingListingsPage extends StatefulWidget {
   const HousingListingsPage({super.key});
@@ -42,28 +43,27 @@ class _HousingListingsPageState extends State<HousingListingsPage> {
     });
   }
 
-Future<void> fetchHousings() async {
-  try {
-    final response = await _supabaseClient
-        .from('HouseListing')
-        .select('id, name, location, amenities, price, image_url, description');  // Put id first
-    
-    setState(() {
-      houseListings = List<Map<String, dynamic>>.from(response);
-      isLoading = false;
-    });
+  Future<void> fetchHousings() async {
+    try {
+      final response = await _supabaseClient.from('HouseListing').select(
+          'id, name, location, amenities, price, image_url, description'); // Put id first
+
+      setState(() {
+        houseListings = List<Map<String, dynamic>>.from(response);
+        isLoading = false;
+      });
     } catch (error) {
-    setState(() {
-      isLoading = false;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error fetching housing listings: $error'),
-        backgroundColor: Colors.red,
-      ),
-    );
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching housing listings: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ Future<void> fetchHousings() async {
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: BouncingImageLoader());
           }
 
           if (houseListings.isEmpty) {
@@ -146,7 +146,8 @@ Future<void> fetchHousings() async {
             );
           }
 
-          final visibleListings = houseListings.take(_loadedItemsCount).toList();
+          final visibleListings =
+              houseListings.take(_loadedItemsCount).toList();
 
           return SingleChildScrollView(
             controller: _scrollController,
@@ -236,8 +237,8 @@ Future<void> fetchHousings() async {
                               imageUrl: url,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
+                              placeholder: (context, url) =>
+                                  const Center(child: BouncingImageLoader()),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),
@@ -271,20 +272,21 @@ Future<void> fetchHousings() async {
                 ),
               ),
               const SizedBox(height: 16),
-Center(
-  child: ElevatedButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => InterestFormPage(
-            house: house,
-            houseName: house['name'] ?? 'Unnamed House',
-            houseId: house['id'].toString(), // Explicitly convert to string
-          ),
-        ),
-      );
-    },
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InterestFormPage(
+                          house: house,
+                          houseName: house['name'] ?? 'Unnamed House',
+                          houseId: house['id']
+                              .toString(), // Explicitly convert to string
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     elevation: 1,
                     backgroundColor: const Color(0xFFE3F2FA),

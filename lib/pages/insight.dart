@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage({super.key});
@@ -61,7 +62,7 @@ class _InsightsPageState extends State<InsightsPage> {
         title: const Text('Insights'),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

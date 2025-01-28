@@ -7,6 +7,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'dart:convert';
 import 'package:reslocate/pages/binterest_form_page.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class AccommodationPage extends StatefulWidget {
   const AccommodationPage({super.key});
@@ -121,7 +122,7 @@ class _AccommodationPageState extends State<AccommodationPage> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : houseListings.isEmpty
               ? const Center(child: Text('No accommodations found'))
               : LayoutBuilder(
@@ -243,8 +244,8 @@ class _AccommodationPageState extends State<AccommodationPage> {
                               imageUrl: url,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
+                              placeholder: (context, url) =>
+                                  const Center(child: BouncingImageLoader()),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),

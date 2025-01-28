@@ -12,6 +12,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:http/http.dart' as http;
 
 final supabase = Supabase.instance.client;
@@ -390,7 +391,7 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: BouncingImageLoader()),
       );
     }
 

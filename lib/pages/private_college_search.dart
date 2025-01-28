@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -293,7 +294,7 @@ class _SearchPageState extends State<SearchPage>
                             suffixIcon: _isSearching
                                 ? const Padding(
                                     padding: EdgeInsets.all(10.0),
-                                    child: CircularProgressIndicator(),
+                                    child: BouncingImageLoader(),
                                   )
                                 : IconButton(
                                     icon: const Icon(Icons.clear),

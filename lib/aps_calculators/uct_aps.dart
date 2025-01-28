@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/available_courses/getAvailableCourses.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CalculateAPSUCTPage extends StatefulWidget {
@@ -330,9 +331,7 @@ class _CalculateAPSUCTPageState extends State<CalculateAPSUCTPage> {
         ),
         child: Center(
           child: isLoading
-              ? const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                )
+              ? const BouncingImageLoader()
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Column(

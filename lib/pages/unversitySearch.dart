@@ -4,6 +4,7 @@ import 'package:reslocate/available_courses/getallcourses.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 
 class UniversitySearchPage extends StatefulWidget {
   final String? searchQuery;
@@ -155,7 +156,7 @@ class _UniversitySearchPageState extends State<UniversitySearchPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: BouncingImageLoader())
               : filteredCards.isNotEmpty
                   ? ListView(
                       children: [

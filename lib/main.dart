@@ -7,6 +7,7 @@ import 'package:reslocate/pages/EnterMarksPage.dart';
 import 'package:reslocate/pages/academicChallenges.dart';
 import 'package:reslocate/pages/almostDone.dart';
 import 'package:reslocate/pages/parent_pages/parent_homepage.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -272,9 +273,7 @@ class AuthenticationWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF0D47A1),
-              ),
+              child: BouncingImageLoader(),
             ),
           );
         }

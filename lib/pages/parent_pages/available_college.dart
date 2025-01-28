@@ -4,6 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:reslocate/widgets/university_cards.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:reslocate/pages/scholarshipsPage.dart';
+import 'package:reslocate/widgets/loadingAnimation.dart';
+
 
 class ParentGetCollegeCourses extends StatefulWidget {
   final int aps; // Add this parameter to receive the APS score
@@ -327,7 +329,7 @@ class _ParentGetCollegeCoursesState extends State<ParentGetCollegeCourses> {
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BouncingImageLoader())
           : SingleChildScrollView(
               child: Column(
                 children: [
