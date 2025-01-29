@@ -383,82 +383,92 @@ class _InsightsPageState extends State<InsightsPage> {
             const SizedBox(height: 16),
             Card(
               color: const Color(0xFFF5F5F5),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Your child's APS Comparison",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  double screenWidth = MediaQuery.of(context).size.width;
+                  double textSize = screenWidth * 0.04; // Scalable text size
+                  double apsSize = screenWidth * 0.06; // APS text size
+
+                  return Padding(
+                    padding: EdgeInsets.all(
+                        screenWidth * 0.04), // Responsive padding
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Text(
+                          "Your child's APS Comparison",
+                          style: TextStyle(
+                            fontSize: textSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: screenWidth * 0.03),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Your APS',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Your APS',
+                                  style: TextStyle(
+                                    fontSize: textSize * 0.85,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                SizedBox(height: screenWidth * 0.01),
+                                Text(
+                                  '$currentAps',
+                                  style: TextStyle(
+                                    fontSize: apsSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0D47A1),
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '$currentAps',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF0D47A1),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.03,
+                                vertical: screenWidth * 0.015,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isAboveAverage
+                                    ? Colors.green.withOpacity(0.1)
+                                    : Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isAboveAverage
+                                        ? Icons.arrow_upward
+                                        : Icons.arrow_downward,
+                                    size: screenWidth * 0.035,
+                                    color: isAboveAverage
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                  SizedBox(width: screenWidth * 0.01),
+                                  Text(
+                                    '${difference.abs().toStringAsFixed(2)} points ${isAboveAverage ? 'above' : 'below'} average',
+                                    style: TextStyle(
+                                      fontSize: textSize * 0.85,
+                                      fontWeight: FontWeight.w500,
+                                      color: isAboveAverage
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isAboveAverage
-                                ? Colors.green.withOpacity(0.1)
-                                : Colors.red.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                isAboveAverage
-                                    ? Icons.arrow_upward
-                                    : Icons.arrow_downward,
-                                size: 16,
-                                color:
-                                    isAboveAverage ? Colors.green : Colors.red,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${difference.abs()} points ${isAboveAverage ? 'above' : 'below'} average',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: isAboveAverage
-                                      ? Colors.green
-                                      : Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
