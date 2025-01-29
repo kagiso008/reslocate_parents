@@ -329,7 +329,7 @@ class _InsightsPageState extends State<InsightsPage> {
                   const SizedBox(height: 24),
                   _buildSubjectAnalysisSection(),
                   const SizedBox(height: 24),
-                  _buildPerformanceSection(),
+                  _buildMatricStatisticsSection(), // New section
                   const SizedBox(height: 24),
                   _buildDistributionSection(),
                 ],
@@ -471,98 +471,6 @@ class _InsightsPageState extends State<InsightsPage> {
                 },
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPerformanceSection() {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Performance Metrics',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatItem(
-                    'Highest Average Mark',
-                    '${_insights.value['highest_average_mark'] ?? 0}%',
-                    Colors.purple,
-                  ),
-                ),
-                Expanded(
-                  child: _buildStatItem(
-                    'Lowest Average Mark',
-                    '${_insights.value['lowest_average_mark'] ?? 0}%',
-                    Colors.red,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildPerformanceList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDemographicsSection() {
-    final genderData = _insights.value['total_users_by_gender'] as Map? ?? {};
-    final raceData = _insights.value['total_users_by_race'] as Map? ?? {};
-
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Demographics',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Gender Distribution',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            ...genderData.entries.map((entry) => _buildDistributionItem(
-                  entry.key.toString(),
-                  entry.value.toString(),
-                )),
-            const SizedBox(height: 16),
-            const Text(
-              'Race Distribution',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            ...raceData.entries.map((entry) => _buildDistributionItem(
-                  entry.key.toString(),
-                  entry.value.toString(),
-                )),
           ],
         ),
       ),
@@ -826,6 +734,112 @@ class _InsightsPageState extends State<InsightsPage> {
               getSubjectDisplayName(entry.key),
               '${entry.value}%',
             )),
+      ],
+    );
+  }
+
+  Widget _buildMatricStatisticsSection() {
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'National Education Statistics 2024',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    'Matric Pass Rate',
+                    '87.3%',
+                    const Color(0xFF0D47A1),
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatItem(
+                    'Bachelor Passes',
+                    '47.8%',
+                    Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Card(
+              color: const Color(0xFFF5F5F5),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'University Statistics',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildWarningStatItem(
+                      'First-Year Dropout Rate',
+                      '60%',
+                      Icons.warning_amber_rounded,
+                      Colors.orange,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildWarningStatItem(
+                      'Overall Degree Completion',
+                      '40%',
+                      Icons.school_rounded,
+                      Colors.blue,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Add new method for warning statistics items
+  Widget _buildWarningStatItem(
+      String label, String value, IconData icon, Color color) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 5, 5, 5),
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
