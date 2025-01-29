@@ -776,7 +776,7 @@ class _HomePageContentState extends State<HomePageContent> {
                 _buildCustomButton(
                   context: context,
                   label: 'Career Assessment',
-                  svgPath: 'assets/images/housing.svg',
+                  svgPath: 'assets/svgs/report.svg',
                   color: Colors.lightBlue,
                   onPressed: () {
                     Navigator.push(

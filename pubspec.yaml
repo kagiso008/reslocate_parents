@@ -207,4 +207,7 @@ flutter:
     - assets/svgs/
     - assets/svgs/google-logo.svg
     - assets/svgs/facebook-logo.svg
+    - assets/svgs/insight.svg
+    - assets/svgs/report.svg
+
 

@@ -459,7 +459,7 @@ class _ParentHomepageContentState extends State<ParentHomepageContent> {
                 _buildReportsButton(
                   context: context,
                   label: 'Learner Report',
-                  svgPath: 'assets/images/housing.svg',
+                  svgPath: 'assets/svgs/report.svg',
                   color: Colors.lightBlue,
                   onPressed: () {
                     Navigator.push(
@@ -588,14 +588,13 @@ class _ParentHomepageContentState extends State<ParentHomepageContent> {
                 _buildCustomButton(
                   context: context,
                   label: 'Insight',
-                  svgPath: 'assets/images/housing.svg',
+                  svgPath: 'assets/svgs/insight.svg',
                   color: Colors.lightBlue,
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const InsightsPage(),
+                        builder: (context) => const InsightsPage(),
                       ),
                     );
                   },
@@ -788,8 +787,8 @@ Widget _buildReportsButton({
           if (svgPath != null)
             SvgPicture.asset(
               svgPath,
-              width: 100, // Larger SVG size
-              height: 100,
+              width: 120, // Larger SVG size
+              height: 120,
             ),
           if (svgPath != null)
             const SizedBox(width: 16), // Space between icon and label
