@@ -26,7 +26,7 @@ class SignupPageState extends State<SignupPage> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _acceptedPrivacyPolicy = false;
-  UserRole _selectedRole = UserRole.learner;
+  final UserRole _selectedRole = UserRole.learner;
   final bool _isLoading = false;
 
   Future<void> _launchPrivacyPolicy() async {

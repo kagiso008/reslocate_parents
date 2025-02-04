@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200"><g transform="translate(250, 50)">
+    <defs>
+      <linearGradient id="flame5Gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" style="stop-color:#FF4949" />
+        <stop offset="100%" style="stop-color:#FFA53E" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="45" fill="#2C2C2C" />
+    <circle cx="50" cy="50" r="40" fill="#1C1C1C" />
+    
+    <path d="M50 15 C65 35 75 50 50 80 C25 50 35 35 50 15" fill="url(#flame5Gradient)">
+      <animate attributeName="d" values="M50 15 C65 35 75 50 50 80 C25 50 35 35 50 15;                 M50 17 C63 37 73 52 50 80 C27 52 37 37 50 17;                 M50 15 C65 35 75 50 50 80 C25 50 35 35 50 15" dur="1.2s" repeatCount="indefinite" />
+    </path>
+    <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold" font-size="24">5</text>
+    <text x="50" y="110" text-anchor="middle" fill="#FF4949" font-family="Arial" font-weight="bold" font-size="12">WINS</text>
+  </g>
+
+  
+  </svg>

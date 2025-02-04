@@ -76,9 +76,7 @@ class _InsightsPageState extends State<InsightsPage> {
     // Create a new map excluding subject4 and second_additional_language if they are None
     var filteredMarks = Map<String, num>.from(userMarks)
       ..removeWhere((key, value) =>
-          value == null ||
-          key == 'subject4_mark' ||
-          key == 'second_additional_language_mark');
+          key == 'subject4_mark' || key == 'second_additional_language_mark');
 
     if (filteredMarks.isEmpty) return {};
 
@@ -800,10 +798,24 @@ class _InsightsPageState extends State<InsightsPage> {
     return ValueListenableBuilder<List<UniversityMatch>>(
       valueListenable: _universityMatches,
       builder: (context, matches, child) {
-        // Sort matches by match_score and take top 3
-        final topMatches = List<UniversityMatch>.from(matches)
-          ..sort((a, b) => b.matchScore.compareTo(a.matchScore))
-          ..take(3);
+        if (matches.isEmpty) {
+          return const Card(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: Text('No university matches available'),
+              ),
+            ),
+          );
+        }
+
+        // Sort and get top 3 based on affordability index
+        final topMatches = (List<UniversityMatch>.from(matches)
+              ..sort((a, b) =>
+                  a.affordabilityIndex.compareTo(b.affordabilityIndex)))
+            .take(3)
+            .toList();
 
         return Card(
           color: Colors.white,
@@ -813,57 +825,52 @@ class _InsightsPageState extends State<InsightsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Top University Matches',
+                  'Top 3 Most Affordable Universities',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
-                if (matches.isEmpty)
-                  const Center(
-                    child: Text('No university matches available'),
-                  )
-                else
-                  ...topMatches.map((match) {
-                    return Card(
-                      color: const Color(0xFFF5F5F5),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.school,
-                                    color: Color(0xFF0D47A1)),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    match.institutionName,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF0D47A1),
-                                    ),
+                ...topMatches.map((match) {
+                  return Card(
+                    color: const Color(0xFFF5F5F5),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.school,
+                                  color: Color(0xFF0D47A1)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  match.institutionName,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0D47A1),
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            _buildMatchDetail('LSM Category', match.parentLsm),
-                            _buildMatchDetail('Match Score',
-                                '${match.matchScore.toStringAsFixed(1)}%'),
-                            _buildMatchDetail('Affordability Index',
-                                match.affordabilityIndex.toStringAsFixed(2)),
-                            _buildCostDetail('Estimated Annual Cost',
-                                'R${match.estimatedAnnualCost.toStringAsFixed(2)}'),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          _buildMatchDetail('LSM Category', match.parentLsm),
+                          _buildMatchDetail('Match Score',
+                              '${match.matchScore.toStringAsFixed(1)}%'),
+                          _buildMatchDetail('Affordability Index',
+                              match.affordabilityIndex.toStringAsFixed(2)),
+                          _buildCostDetail('Estimated Annual Cost',
+                              'R${match.estimatedAnnualCost.toStringAsFixed(2)}'),
+                        ],
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  );
+                }).toList(),
               ],
             ),
           ),
