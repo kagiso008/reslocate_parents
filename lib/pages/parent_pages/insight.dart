@@ -16,6 +16,7 @@ class _InsightsPageState extends State<InsightsPage> {
   final SupabaseClient _supabaseClient = Supabase.instance.client;
   final _isLoading = false.obs;
   final _insights = Rx<Map<String, dynamic>>({});
+  final _universityMatches = <Map<String, dynamic>>[].obs;
   final _supabase = Supabase.instance.client;
   late Map<String, String> subjectNames;
   Map<String, int?> userMarks = {};
@@ -26,6 +27,7 @@ class _InsightsPageState extends State<InsightsPage> {
     super.initState();
     loadChildData();
     _fetchInsights();
+    _fetchUniversityMatches();
   }
 
   Map<String, String> _subjectDisplayNames = {
@@ -67,6 +69,27 @@ class _InsightsPageState extends State<InsightsPage> {
         'mark': minEntry.value
       }
     };
+  }
+
+  Future<void> _fetchUniversityMatches() async {
+    try {
+      String childUserId = await getSelectedChildId();
+      final response = await _supabaseClient
+          .from('university_matches')
+          .select('''
+          institution_name,
+          lsm_category,
+          recommended_course,
+          estimated_cost_min,
+          estimated_cost_max
+        ''')
+          .eq('profile_id', childUserId)
+          .order('created_at', ascending: false);
+
+      _universityMatches.value = List<Map<String, dynamic>>.from(response);
+    } catch (error) {
+      debugPrint('Error fetching university matches: $error');
+    }
   }
 
   Future<void> _fetchInsights() async {
@@ -330,6 +353,8 @@ class _InsightsPageState extends State<InsightsPage> {
                   _buildSubjectAnalysisSection(),
                   const SizedBox(height: 24),
                   _buildMatricStatisticsSection(), // New section
+                  const SizedBox(height: 24),
+                  _buildUniversityMatchesSection(),
                   const SizedBox(height: 24),
                   _buildDistributionSection(),
                 ],
@@ -735,6 +760,175 @@ class _InsightsPageState extends State<InsightsPage> {
               '${entry.value}%',
             )),
       ],
+    );
+  }
+
+  Widget _buildUniversityMatchesSection() {
+    if (_universityMatches.isEmpty) {
+      return Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'University Matches',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16),
+              Center(
+                child: Text('No university matches available'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'University Matches',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...List.generate(_universityMatches.length, (index) {
+              final match = _universityMatches[index];
+              return Card(
+                color: const Color(0xFFF5F5F5),
+                margin: const EdgeInsets.only(bottom: 12),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.school, color: Color(0xFF0D47A1)),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              match['institution_name'] ?? '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0D47A1),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildMatchDetail(
+                          'LSM Category', match['lsm_category'] ?? ''),
+                      _buildMatchDetail('Recommended Course',
+                          match['recommended_course'] ?? ''),
+                      _buildCostRange(
+                        match['estimated_cost_min']?.toString() ?? '',
+                        match['estimated_cost_max']?.toString() ?? '',
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMatchDetail(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCostRange(String minCost, String maxCost) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Estimated Cost Range',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'R${minCost}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                const Text(
+                  'to',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Text(
+                  'R${maxCost}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

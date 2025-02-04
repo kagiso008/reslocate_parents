@@ -1,10 +1,9 @@
 import 'package:reslocate/main.dart' show ContextExtension, supabase;
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Assuming your logo is an SVG
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:reslocate/pages/careerAspirations.dart';
 import 'package:reslocate/pages/parent_pages/studentDetails.dart';
 import 'package:reslocate/widgets/mytoast.dart';
-// For formatting the date
 
 class ParentAccount extends StatefulWidget {
   const ParentAccount({super.key});
@@ -92,7 +91,7 @@ class _ParentAccountState extends State<ParentAccount> {
               ),
             );
           }
-                }
+        }
       } catch (e) {
         print('Error getting user role: $e');
         MyToast.showToast(context, 'Navigation error. Please try again.');

@@ -1085,12 +1085,30 @@ class _ParentStudentDetailsPageState extends State<ParentStudentDetailsPage> {
       );
 
       // Prepare student data for the prompt
+      final careerGuidanceResponse =
+          _careerGuidanceResponses[studentProfile['id']];
       final studentInfo = '''
-Name: ${studentProfile['name']}
+Name: ${studentProfile['first_name']} ${studentProfile['last_name']}
 Age: ${studentProfile['age']}
 Academic Performance: ${_childrenMarks[studentProfile['id']]}
 Interests: ${studentProfile['interests']}
 Strengths: ${studentProfile['strengths']}
+Family Support: ${careerGuidanceResponse!['family_support'] ?? 'Not specified'}
+Internet Access: ${careerGuidanceResponse['internet_access'] ?? 'Not specified'}
+School Library: ${careerGuidanceResponse['school_library'] ?? 'Not specified'}
+Computer Lab: ${careerGuidanceResponse['computer_lab'] ?? 'Not specified'}
+Workforce Worries: ${careerGuidanceResponse['workforce_worries'] ?? 'Not specified'}
+Library Visits: ${careerGuidanceResponse['library_visits'] ?? 'Not specified'}
+Soft Skills: ${careerGuidanceResponse['soft_skills']?.join(', ') ?? 'Not specified'}
+Soft Skills Explanation: ${careerGuidanceResponse['soft_skills_explanation'] ?? 'Not specified'}
+Preferred Activities: ${careerGuidanceResponse['preferred_activities'] ?? 'Not specified'}
+Work Environment: ${careerGuidanceResponse['work_environment'] ?? 'Not specified'}
+Problem Solving Style: ${careerGuidanceResponse['problem_solving_style'] ?? 'Not specified'}
+Team Role: ${careerGuidanceResponse['team_role'] ?? 'Not specified'}
+Energy Source: ${careerGuidanceResponse['energy_source'] ?? 'Not specified'}
+Information Processing: ${careerGuidanceResponse['information_processing'] ?? 'Not specified'}
+Decision Making: ${careerGuidanceResponse['decision_making'] ?? 'Not specified'}
+Lifestyle Preference: ${careerGuidanceResponse['lifestyle_preference'] ?? 'Not specified'}
 ''';
 
       // Create content for Gemini
@@ -1182,6 +1200,12 @@ Format the response in clear sections with detailed explanations.
       );
     } catch (e) {
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error generating report: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() => _isGeneratingReport = false);
