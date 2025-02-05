@@ -161,8 +161,6 @@ class _InsightsPageState extends State<InsightsPage> {
   Future<String> getSelectedChildId() async {
     try {
       final userId = _supabaseClient.auth.currentUser?.id;
-      print(userId);
-
       if (userId == null) {
         throw Exception('No user logged in');
       }
@@ -862,8 +860,6 @@ class _InsightsPageState extends State<InsightsPage> {
                           _buildMatchDetail('LSM Category', match.parentLsm),
                           _buildMatchDetail('Match Score',
                               '${match.matchScore.toStringAsFixed(1)}%'),
-                          _buildMatchDetail('Affordability Index',
-                              match.affordabilityIndex.toStringAsFixed(2)),
                           _buildCostDetail('Estimated Annual Cost',
                               'R${match.estimatedAnnualCost.toStringAsFixed(2)}'),
                         ],
